@@ -129,7 +129,7 @@ func nohupApp(appName string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Fprintf(os.Stdout, string(out))
+	fmt.Fprintf(os.Stdout,"success please CTRL+Z")
 }
 
 //查看运行状态
