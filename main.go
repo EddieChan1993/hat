@@ -40,26 +40,19 @@ func main() {
 	switch command {
 	case COMMAND_B_DEV:
 		buildDev(*version, *appName)
-		break
 	case COMMAND_B_PROD:
 		buildProd(*version, *appName)
-		break
 	case COMMAND_START:
 		nohupApp(*appName)
 		showStatus()
-		break
 	case COMMAND_STATUS:
 		showStatus()
-		break
 	case COMMAND_RESTART:
 		restartApp(*appName)
-		break
 	case COMMAND_STOP:
 		stopApp(*appName)
-		break
 	case COMMAND_HELP:
 		flag.Usage()
-		break
 	default:
 		flag.Usage()
 	}
