@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const ERROR_MSG = "something error"
+
 const COMMAND_B_DEV = "dev"
 const COMMAND_B_PROD = "prod"
 const COMMAND_START = "start"
@@ -70,11 +72,7 @@ func restartApp(appName string) {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println("restart is ok")
+	checkErr(err,[]byte("\nsuccess"))
 }
 
 //关闭程序
@@ -84,11 +82,7 @@ func stopApp(appName string) {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println("stop is ok")
+	checkErr(err,[]byte("\nsuccess"))
 }
 
 //编译生成开发环境程序
@@ -100,11 +94,7 @@ func buildDev(version, appName string) {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println("\nsuccess")
+	checkErr(err,[]byte("\nsuccess"))
 }
 
 //编译生成开发环境程序
@@ -116,11 +106,7 @@ func buildProd(version, appName string) {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println("\nsuccess")
+	checkErr(err,[]byte("\nsuccess"))
 }
 
 func nohupApp(appName string) {
@@ -129,11 +115,7 @@ func nohupApp(appName string) {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println("success\nplease CTRL+Z")
+	checkErr(err,[]byte("success\nplease CTRL+Z"))
 }
 
 //查看运行状态
@@ -142,11 +124,7 @@ func showStatus() {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println(string(out))
+	checkErr(err,out)
 }
 
 //编译条件
@@ -194,4 +172,13 @@ func spinner(delay time.Duration, title string) {
 			time.Sleep(delay)
 		}
 	}
+}
+
+func checkErr(err error,out []byte) {
+	if err != nil {
+		fmt.Println(ERROR_MSG)
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println(string(out))
 }
