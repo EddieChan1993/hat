@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os/exec"
-	"log"
 	"os"
 	"time"
 )
@@ -72,9 +71,10 @@ func restartApp(appName string) {
 	out, err = cmd.Output()
 
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
-	fmt.Fprintf(os.Stdout, "\n restart is ok")
+	fmt.Println("restart is ok")
 }
 
 //关闭程序
@@ -85,9 +85,10 @@ func stopApp(appName string) {
 	out, err = cmd.Output()
 
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
-	fmt.Fprintf(os.Stdout, "\n stop is ok")
+	fmt.Println("stop is ok")
 }
 
 //编译生成开发环境程序
@@ -100,7 +101,8 @@ func buildDev(version, appName string) {
 	out, err = cmd.Output()
 
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 	fmt.Println("\nsuccess")
 }
@@ -115,9 +117,10 @@ func buildProd(version, appName string) {
 	out, err = cmd.Output()
 
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
-	fmt.Fprintf(os.Stdout, "\nsuccess")
+	fmt.Println("\nsuccess")
 }
 
 func nohupApp(appName string) {
@@ -127,9 +130,10 @@ func nohupApp(appName string) {
 	out, err = cmd.Output()
 
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
-	fmt.Fprintf(os.Stdout,"success please CTRL+Z")
+	fmt.Println("success\nplease CTRL+Z")
 }
 
 //查看运行状态
@@ -139,9 +143,10 @@ func showStatus() {
 	out, err = cmd.Output()
 
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
-	fmt.Fprintf(os.Stdout, string(out))
+	fmt.Println(string(out))
 }
 
 //编译条件
