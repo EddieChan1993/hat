@@ -115,9 +115,11 @@ func nohupApp(appName string) {
 func showStatus() {
 	c := "tail -f nohup.out"
 	cmd := exec.Command("sh", "-c", c)
-	out, err = cmd.Output()
+	cmd.Run()
 
-	checkErr(err,out)
+	//out, err = cmd.Output()
+	//
+	//checkErr(err,out)
 }
 
 //编译条件
