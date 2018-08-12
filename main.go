@@ -198,8 +198,8 @@ func checkErr(err error, out string) {
 		os.Exit(1)
 	}
 	if out == "" {
-		fmt.Println("\n=======")
 		fmt.Println("success")
+		fmt.Println("=======")
 	} else {
 		fmt.Println(string(out))
 	}
