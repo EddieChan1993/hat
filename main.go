@@ -113,7 +113,7 @@ func nohupApp(appName string) {
 
 //查看运行状态
 func showStatus() {
-	c := "tail -f runtime/logs/req/app.log"
+	c := "tail -f nohup.out"
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
