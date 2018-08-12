@@ -65,7 +65,7 @@ func restartApp(appName string) {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	checkErr(err,[]byte("\nsuccess"))
+	checkErr(err,[]byte("success"))
 }
 
 //关闭程序
@@ -75,7 +75,7 @@ func stopApp(appName string) {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	checkErr(err,[]byte("\nsuccess"))
+	checkErr(err,[]byte("success"))
 }
 
 //编译生成开发环境程序
@@ -87,7 +87,7 @@ func buildDev(version, appName string) {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	checkErr(err,[]byte("\nsuccess"))
+	checkErr(err,[]byte("success"))
 }
 
 //编译生成开发环境程序
@@ -99,7 +99,7 @@ func buildProd(version, appName string) {
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
-	checkErr(err,[]byte("\nsuccess"))
+	checkErr(err,[]byte("success"))
 }
 
 func nohupApp(appName string) {
