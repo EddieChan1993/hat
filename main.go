@@ -156,7 +156,7 @@ func spinner(delay time.Duration, title string) {
 //需要对shell标准输出的逐行实时进行处理的
 func execCommand(s string) {
 	//函数返回一个*Cmd，用于使用给出的参数执行name指定的程序
-	cmd := exec.Command("ch", "c", s)
+	cmd := exec.Command("sh", "-c", s)
 	//显示运行的命令
 	//fmt.Println(cmd.Args)
 	//StdoutPipe方法返回一个在命令Start后与命令标准输出关联的管道。Wait方法获知命令结束后会关闭这个管道，一般不需要显式的关闭该管道。
