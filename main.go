@@ -174,7 +174,7 @@ func execCommand(s string) {
 		if err2 != nil || io.EOF == err2 {
 			break
 		}
-		fmt.Println(line)
+		fmt.Print(line)
 	}
 	//阻塞直到该命令执行完成，该命令必须是被Start方法开始执行的
 	cmd.Wait()
