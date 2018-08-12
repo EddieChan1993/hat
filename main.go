@@ -113,7 +113,7 @@ func nohupApp(appName string) {
 
 //查看运行状态
 func showStatus() {
-	c := "tail -f nohup.out"
+	c := "tail -f runtime/logs/req/app.log"
 	cmd := exec.Command("sh", "-c", c)
 	out, err = cmd.Output()
 
@@ -170,7 +170,7 @@ func spinner(delay time.Duration, title string) {
 func checkErr(err error,out []byte) {
 	if err != nil {
 		fmt.Println(ERROR_MSG)
-		fmt.Println(err)
+		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 	fmt.Println(string(out))
