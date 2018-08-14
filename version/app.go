@@ -33,7 +33,7 @@ func (this *AppVersion) WriteVersion() {
 func (this *AppVersion)isExtraVersion(av []AppVersion)  {
 	for _,v:=range av{
 		if v.Version == this.Version &&v.Model==this.Model{
-			fmt.Println("【",this.Model,"】版本号冲突")
+			fmt.Println("【",this.Model,"】版本号冲突,以下版本已用:")
 			getAllVersion(av,this.Model)
 			os.Exit(1)
 		}
@@ -42,10 +42,10 @@ func (this *AppVersion)isExtraVersion(av []AppVersion)  {
 
 //获取所有版本
 func getAllVersion(av []AppVersion,mode string) {
-	fmt.Println("【",mode,"】所有已用版本：")
+	fmt.Println("")
 	for _,v:=range av{
 		if v.Model==mode {
-			fmt.Println(v.Version)
+			fmt.Println(fmt.Sprintf("%2s%s","",v.Version))
 		}
 	}
 }

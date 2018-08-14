@@ -76,6 +76,7 @@ func stopApp(appName string) {
 //编译生成开发环境程序
 func buildDev(v, appName string) {
 	buildCond(v, appName)
+	v=fmt.Sprintf("v%s",v)
 	logVersion(v, env[COMMAND_B_DEV])
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_DEV], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
@@ -86,6 +87,7 @@ func buildDev(v, appName string) {
 //编译生成开发环境程序
 func buildProd(v, appName string) {
 	buildCond(v, appName)
+	v=fmt.Sprintf("v%s",v)
 	logVersion(v, env[COMMAND_B_PROD])
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_PROD], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
@@ -211,5 +213,5 @@ func logVersion(v, mode string) {
 	dateNow := time.Now().Format(YMD_HIS)
 	appV := version.AppVersion{mode, v, dateNow}
 	appV.WriteVersion()
-	fmt.Println("版本序列化OK")
+	fmt.Println("版本序列化 ok")
 }
