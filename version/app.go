@@ -34,8 +34,8 @@ func (this *AppVersion) WriteVersion() {
 //是否已经使用当前版本
 func (this *AppVersion) isExtraVersion(av []AppVersion) {
 	for _, v := range av {
-		if v.Model == this.Model && (v.Version == this.Version|| v.CommitId == this.CommitId) {
-			fmt.Println("【", this.Model, "】【",this.CommitId,"】\n 版本号或提交ID冲突,已发布程序记录:")
+		if v.Model == this.Model && (v.Version == this.Version || v.CommitId == this.CommitId) {
+			fmt.Println(" 版本号或提交ID冲突,已发布程序记录:\n【", this.Version, "】【", this.CommitId, "】【", this.Model, "】")
 			this.getAllVersion(av)
 			os.Exit(1)
 		}
@@ -45,10 +45,10 @@ func (this *AppVersion) isExtraVersion(av []AppVersion) {
 //获取所有版本
 func (this *AppVersion) getAllVersion(av []AppVersion) {
 	fmt.Println("")
-	fmt.Println(fmt.Sprintf("%2s%s%9s%9s", "", "版本号","提交ID","分支"))
+	fmt.Println(fmt.Sprintf("%2s%s%9s%9s", "", "版本号", "提交ID", "分支"))
 	for _, v := range av {
 		if v.Model == this.Model {
-			fmt.Println(fmt.Sprintf("%2s%s%14s%12s", "", v.Version,v.CommitId,v.Branch))
+			fmt.Println(fmt.Sprintf("%2s%s%14s%12s", "", v.Version, v.CommitId, v.Branch))
 		}
 	}
 }
