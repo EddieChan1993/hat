@@ -11,7 +11,7 @@ import (
 const mb int64 = 1 << (10 * 2)
 
 var (
-	logSavePath = "runtime/logs"
+	logSavePath = "runtime"
 	logFileExt  = "json"
 )
 
