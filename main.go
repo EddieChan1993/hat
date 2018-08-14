@@ -9,6 +9,7 @@ import (
 	"io"
 	"bufio"
 	"bytes"
+	"hat/version"
 )
 
 const ERROR_MSG = "something error"
@@ -20,6 +21,7 @@ const COMMAND_STATUS = "status"
 const COMMAND_RESTART = "restart"
 const COMMAND_STOP = "stop"
 const COMMAND_HELP = "help"
+const YMD_HIS="2006-01-02 15:04:05"
 
 var env = map[string]string{
 	COMMAND_B_DEV:  "开发环境",
@@ -76,19 +78,21 @@ func stopApp(appName string) {
 }
 
 //编译生成开发环境程序
-func buildDev(version, appName string) {
-	buildCond(version, appName)
-	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_DEV], version, appName))
-	versionStr := fmt.Sprintf("-X main._version_=%s", version)
+func buildDev(v, appName string) {
+	buildCond(v, appName)
+	logVersion(v,env[COMMAND_B_DEV])
+	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_DEV], v, appName))
+	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -o %s", versionStr, appName)
 	exec_shell(c)
 }
 
 //编译生成开发环境程序
-func buildProd(version, appName string) {
-	buildCond(version, appName)
-	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_DEV], version, appName))
-	versionStr := fmt.Sprintf("-X main._version_=%s", version)
+func buildProd(v, appName string) {
+	buildCond(v, appName)
+	logVersion(v,env[COMMAND_B_PROD])
+	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_PROD], v, appName))
+	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -tags=prod -o %s", versionStr, appName)
 	exec_shell(c)
 }
@@ -192,6 +196,7 @@ func exec_shell(s string) {
 	checkErr(err, out.String())
 }
 
+//异常处理
 func checkErr(err error, out string) {
 	if err != nil {
 		fmt.Println(err.Error())
@@ -203,4 +208,12 @@ func checkErr(err error, out string) {
 	} else {
 		fmt.Println(string(out))
 	}
+}
+
+//序列化版本
+func logVersion(v ,mode string) {
+	dateNow:= time.Now().Format(YMD_HIS)
+	appV:=version.AppVersion{mode, v,dateNow}
+	appV.EncodeFile()
+	fmt.Println("版本序列化OK")
 }
