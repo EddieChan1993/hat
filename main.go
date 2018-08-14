@@ -10,6 +10,7 @@ import (
 	"bufio"
 	"bytes"
 	"hat/version"
+	"strings"
 )
 
 const COMMAND_B_DEV = "dev"
@@ -63,43 +64,43 @@ func main() {
 func restartApp(appName string) {
 	isExtraAppName(appName)
 	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -1 {}", appName)
-	exec_shell(c)
+	execShell(c)
 }
 
 //关闭程序
 func stopApp(appName string) {
 	isExtraAppName(appName)
 	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill {}", appName)
-	exec_shell(c)
+	execShell(c)
 }
 
 //编译生成开发环境程序
 func buildDev(v, appName string) {
 	buildCond(v, appName)
-	v=fmt.Sprintf("v%s",v)
+	v = fmt.Sprintf("v%s", v)
 	logVersion(v, env[COMMAND_B_DEV])
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_DEV], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -o %s", versionStr, appName)
-	exec_shell(c)
+	execShell(c)
 }
 
 //编译生成开发环境程序
 func buildProd(v, appName string) {
 	buildCond(v, appName)
-	v=fmt.Sprintf("v%s",v)
+	v = fmt.Sprintf("v%s", v)
 	logVersion(v, env[COMMAND_B_PROD])
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_PROD], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -tags=prod -o %s", versionStr, appName)
-	exec_shell(c)
+	execShell(c)
 }
 
 func nohupApp(appName string) {
 	fmt.Println("please CTRL+Z")
 	isExtraAppName(appName)
 	c := fmt.Sprintf("nohup ./%s &", appName)
-	exec_shell(c)
+	execShell(c)
 }
 
 //查看运行状态
@@ -183,7 +184,7 @@ func execCommand(s string) {
 }
 
 //阻塞式的执行外部shell命令的函数,等待执行完毕并返回标准输出
-func exec_shell(s string) {
+func execShell(s string) {
 	//函数返回一个*Cmd，用于使用给出的参数执行name指定的程序
 	cmd := exec.Command("sh", "-c", s)
 	//读取io.Writer类型的cmd.Stdout，再通过bytes.Buffer(缓冲byte类型的缓冲器)将byte类型转化为string类型(out.String():这是bytes类型提供的接口)
@@ -192,6 +193,18 @@ func exec_shell(s string) {
 	//Run执行c包含的命令，并阻塞直到完成。  这里stdout被取出，cmd.Wait()无法正确获取stdin,stdout,stderr，则阻塞在那了
 	err := cmd.Run()
 	checkErr(err, out.String())
+}
+
+//阻塞式的执行外部shell命令的函数,等待执行完毕并返回标准输出，有返回值
+func execShellRes(s string) (r string, err error) {
+	//函数返回一个*Cmd，用于使用给出的参数执行name指定的程序
+	cmd := exec.Command("sh", "-c", s)
+	//读取io.Writer类型的cmd.Stdout，再通过bytes.Buffer(缓冲byte类型的缓冲器)将byte类型转化为string类型(out.String():这是bytes类型提供的接口)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	//Run执行c包含的命令，并阻塞直到完成。  这里stdout被取出，cmd.Wait()无法正确获取stdin,stdout,stderr，则阻塞在那了
+	err = cmd.Run()
+	return out.String(), err
 }
 
 //异常处理
@@ -211,7 +224,20 @@ func checkErr(err error, out string) {
 //序列化版本
 func logVersion(v, mode string) {
 	dateNow := time.Now().Format(YMD_HIS)
-	appV := version.AppVersion{mode, v, dateNow}
+	cmdStr := `git rev-parse --abbrev-ref HEAD`
+	branch ,err := execShellRes(cmdStr)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	branch=strings.Replace(branch, "\n", "", -1)
+	cmdStr = `git log --pretty=format:"%h" -1`
+	commitId ,err := execShellRes(cmdStr)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	appV := version.AppVersion{mode, v, dateNow,branch,commitId}
 	appV.WriteVersion()
 	fmt.Println("版本序列化 ok")
 }
