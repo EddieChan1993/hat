@@ -12,8 +12,6 @@ import (
 	"hat/version"
 )
 
-const ERROR_MSG = "something error"
-
 const COMMAND_B_DEV = "dev"
 const COMMAND_B_PROD = "prod"
 const COMMAND_START = "start"
@@ -21,17 +19,15 @@ const COMMAND_STATUS = "status"
 const COMMAND_RESTART = "restart"
 const COMMAND_STOP = "stop"
 const COMMAND_HELP = "help"
-const YMD_HIS="2006-01-02 15:04:05"
 
-var env = map[string]string{
-	COMMAND_B_DEV:  "开发环境",
-	COMMAND_B_PROD: "生产环境",
-}
+const YMD_HIS="2006-01-02 15:04:05"
 
 var (
 	usageStr, command string
-	out               []byte
-	err               error
+	env = map[string]string{
+		COMMAND_B_DEV:  "开发模式",
+		COMMAND_B_PROD: "生产模式",
+	}
 )
 
 func main() {
