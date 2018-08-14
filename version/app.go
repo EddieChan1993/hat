@@ -34,7 +34,7 @@ func (this *AppVersion) WriteVersion() {
 //是否已经使用当前版本
 func (this *AppVersion) isExtraVersion(av []AppVersion) {
 	for _, v := range av {
-		if v.Model == this.Model && v.Version == this.Version && v.CommitId == this.CommitId {
+		if v.Model == this.Model && (v.Version == this.Version || v.CommitId == this.CommitId) {
 			fmt.Println(" 版本号或提交ID冲突,已发布程序记录:\n【", this.Version, "】【", this.CommitId, "】【", this.Model, "】")
 			this.getAllVersion(av)
 			os.Exit(1)
