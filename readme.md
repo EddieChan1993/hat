@@ -1,11 +1,12 @@
 #  hat是辅助于alphago的程序工具
 
 
-#  安装
+##  安装
 ```
 go get github.com/EddieChan1993/hat
 ```
-# 使用
+## 使用
+在执行项目的入口文件下执行下面命令
 ```
 
     #帮助文档
@@ -24,6 +25,7 @@ go get github.com/EddieChan1993/hat
     hat status
 
 ```
-
+## 功能特色
+版本日志记录，判断冲突版本，同时列出已经使用版本
 
 

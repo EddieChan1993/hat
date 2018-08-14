@@ -214,6 +214,6 @@ func checkErr(err error, out string) {
 func logVersion(v ,mode string) {
 	dateNow:= time.Now().Format(YMD_HIS)
 	appV:=version.AppVersion{mode, v,dateNow}
-	appV.EncodeFile()
+	appV.WriteVersion()
 	fmt.Println("版本序列化OK")
 }

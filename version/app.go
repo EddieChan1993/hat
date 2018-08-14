@@ -14,7 +14,7 @@ type AppVersion struct {
 }
 
 //版本日志记录
-func (this *AppVersion) EncodeFile() {
+func (this *AppVersion) WriteVersion() {
 	fileName, file := getLogFilePullPath("version", "app")
 	defer file.Close()
 	u:=jsonRead(fileName)

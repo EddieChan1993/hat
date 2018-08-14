@@ -19,6 +19,7 @@ func getLogFilePath(logFileName string) string {
 	return fmt.Sprintf("%s/%s", logSavePath, logFileName)
 }
 
+//获取全路径
 func getLogFilePullPath(logPathName, logFileName string) (string,*os.File) {
 	prefixPath := getLogFilePath(logPathName)
 	suffixPath := fmt.Sprintf("%s.%s", logFileName, logFileExt)
@@ -28,6 +29,7 @@ func getLogFilePullPath(logPathName, logFileName string) (string,*os.File) {
 	return filePath,file
 }
 
+//判断文件路径是否正确
 func openLogFile(logPathName, filePath string) *os.File {
 	_, err := os.Stat(filePath)
 	switch {
@@ -44,6 +46,7 @@ func openLogFile(logPathName, filePath string) *os.File {
 	return file
 }
 
+//创建目录
 func mkDir(filePath string) {
 	dir, _ := os.Getwd()
 	err := os.MkdirAll(dir+"/"+filePath, os.ModePerm)
@@ -52,7 +55,7 @@ func mkDir(filePath string) {
 	}
 }
 
-
+//读取json文件
 func jsonRead(filename string) []AppVersion {
 	var appV []AppVersion
 	data, err := ioutil.ReadFile(filename)
@@ -65,6 +68,7 @@ func jsonRead(filename string) []AppVersion {
 	return appV
 }
 
+//写入json文件
 func jsonWrite(fp *os.File,data []byte) {
 	_, err := fp.Write(data)
 	if err != nil {
