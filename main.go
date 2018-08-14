@@ -9,8 +9,8 @@ import (
 	"io"
 	"bufio"
 	"bytes"
-	"hat/version"
 	"strings"
+	"github.com/EddieChan1993/hat/version"
 )
 
 const COMMAND_B_DEV = "dev"
