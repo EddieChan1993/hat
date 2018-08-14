@@ -20,11 +20,11 @@ const COMMAND_RESTART = "restart"
 const COMMAND_STOP = "stop"
 const COMMAND_HELP = "help"
 
-const YMD_HIS="2006-01-02 15:04:05"
+const YMD_HIS = "2006-01-02 15:04:05"
 
 var (
 	usageStr, command string
-	env = map[string]string{
+	env               = map[string]string{
 		COMMAND_B_DEV:  "开发模式",
 		COMMAND_B_PROD: "生产模式",
 	}
@@ -76,7 +76,7 @@ func stopApp(appName string) {
 //编译生成开发环境程序
 func buildDev(v, appName string) {
 	buildCond(v, appName)
-	logVersion(v,env[COMMAND_B_DEV])
+	logVersion(v, env[COMMAND_B_DEV])
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_DEV], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -o %s", versionStr, appName)
@@ -86,7 +86,7 @@ func buildDev(v, appName string) {
 //编译生成开发环境程序
 func buildProd(v, appName string) {
 	buildCond(v, appName)
-	logVersion(v,env[COMMAND_B_PROD])
+	logVersion(v, env[COMMAND_B_PROD])
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_PROD], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -tags=prod -o %s", versionStr, appName)
@@ -134,10 +134,10 @@ func usage() {
 	usageStr += "The commands are:\n"
 	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's programe\n", "-v", "-n", COMMAND_B_DEV, COMMAND_B_DEV)
 	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's programe\n", "-v", "-n", COMMAND_B_PROD, COMMAND_B_PROD)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s				%s programe\n", "-n", COMMAND_START, COMMAND_START)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s				%s programe\n", "-n", COMMAND_RESTART, COMMAND_RESTART)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s					%s programe\n", "-n", COMMAND_STOP, COMMAND_STOP)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s				%s programe\n", "-n", COMMAND_STATUS, COMMAND_STATUS)
+	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_START, COMMAND_START)
+	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_RESTART, COMMAND_RESTART)
+	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_STOP, COMMAND_STOP)
+	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_STATUS, COMMAND_STATUS)
 	usageStr += fmt.Sprintf("	%s							look up help\n", COMMAND_HELP)
 	fmt.Fprintf(os.Stderr, usageStr)
 }
@@ -207,9 +207,9 @@ func checkErr(err error, out string) {
 }
 
 //序列化版本
-func logVersion(v ,mode string) {
-	dateNow:= time.Now().Format(YMD_HIS)
-	appV:=version.AppVersion{mode, v,dateNow}
+func logVersion(v, mode string) {
+	dateNow := time.Now().Format(YMD_HIS)
+	appV := version.AppVersion{mode, v, dateNow}
 	appV.WriteVersion()
 	fmt.Println("版本序列化OK")
 }
