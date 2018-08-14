@@ -15,6 +15,20 @@ type AppVersion struct {
 	CommitId string `json:"commit_id"`
 }
 
+//获取所有dev模式下的版本记录
+func GetVerAllLog(mode string) {
+	fileName, file := getLogFilePullPath("version", "app")
+	defer file.Close()
+	av := jsonRead(fileName)
+	fmt.Println(fmt.Sprintf("【%2s】",mode))
+	fmt.Println(fmt.Sprintf("%2s%s%9s%9s", "", "版本号", "提交ID", "分支"))
+	for _, v := range av {
+		if v.Model == mode {
+			fmt.Println(fmt.Sprintf("%2s%s%14s%12s", "", v.Version, v.CommitId, v.Branch))
+		}
+	}
+}
+
 //版本日志记录
 func (this *AppVersion) WriteVersion() {
 	fileName, file := getLogFilePullPath("version", "app")
@@ -52,3 +66,5 @@ func (this *AppVersion) getAllVersion(av []AppVersion) {
 		}
 	}
 }
+
+

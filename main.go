@@ -10,7 +10,7 @@ import (
 	"bufio"
 	"bytes"
 	"strings"
-	"github.com/EddieChan1993/hat/version"
+	ver "github.com/EddieChan1993/hat/version"
 )
 
 const COMMAND_B_DEV = "dev"
@@ -20,6 +20,8 @@ const COMMAND_STATUS = "status"
 const COMMAND_RESTART = "restart"
 const COMMAND_STOP = "stop"
 const COMMAND_HELP = "help"
+const COMMAND_VER_DEV = "ver_dev"
+const COMMAND_VER_PROD = "ver_prod"
 
 const YMD_HIS = "2006-01-02 15:04:05"
 
@@ -34,7 +36,6 @@ var (
 func main() {
 	version := flag.String("v", "none", "programe's version")
 	appName := flag.String("n", "main", "programe's name")
-
 	flag.Parse()
 	flag.Usage = usage
 	command = flag.Arg(0)
@@ -53,6 +54,10 @@ func main() {
 		restartApp(*appName)
 	case COMMAND_STOP:
 		stopApp(*appName)
+	case COMMAND_VER_DEV:
+		ver.GetVerAllLog(env[COMMAND_B_DEV])
+	case COMMAND_VER_PROD:
+		ver.GetVerAllLog(env[COMMAND_B_PROD])
 	case COMMAND_HELP:
 		flag.Usage()
 	default:
@@ -142,6 +147,8 @@ func usage() {
 	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_STOP, COMMAND_STOP)
 	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_STATUS, COMMAND_STATUS)
 	usageStr += fmt.Sprintf("	%s							look up help\n", COMMAND_HELP)
+	usageStr += fmt.Sprintf("	%s							look up dev's version log\n", COMMAND_VER_DEV)
+	usageStr += fmt.Sprintf("	%s						look up prod's version log\n", COMMAND_VER_PROD)
 	fmt.Fprintf(os.Stderr, usageStr)
 }
 
@@ -237,7 +244,7 @@ func logVersion(v, mode string) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	appV := version.AppVersion{mode, v, dateNow,branch,commitId}
+	appV := ver.AppVersion{mode, v, dateNow,branch,commitId}
 	appV.WriteVersion()
 	fmt.Println("版本序列化 ok")
 }
