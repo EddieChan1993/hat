@@ -138,8 +138,11 @@ func isExtraAppName(appName string) {
 
 func usage() {
 	usageStr = "Usage:\n"
+	usageStr += "\n"
 	usageStr += "	hat [arguments] command\n"
+	usageStr += "\n"
 	usageStr += "The commands are:\n"
+	usageStr += "\n"
 	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's programe\n", "-v", "-n", COMMAND_B_DEV, COMMAND_B_DEV)
 	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's programe\n", "-v", "-n", COMMAND_B_PROD, COMMAND_B_PROD)
 	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_START, COMMAND_START)
@@ -232,19 +235,19 @@ func checkErr(err error, out string) {
 func logVersion(v, mode string) {
 	dateNow := time.Now().Format(YMD_HIS)
 	cmdStr := `git rev-parse --abbrev-ref HEAD`
-	branch ,err := execShellRes(cmdStr)
+	branch, err := execShellRes(cmdStr)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	branch=strings.Replace(branch, "\n", "", -1)
+	branch = strings.Replace(branch, "\n", "", -1)
 	cmdStr = `git log --pretty=format:"%h" -1`
-	commitId ,err := execShellRes(cmdStr)
+	commitId, err := execShellRes(cmdStr)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	appV := ver.AppVersion{mode, v, dateNow,branch,commitId}
+	appV := ver.AppVersion{mode, v, dateNow, branch, commitId}
 	appV.WriteVersion()
 	fmt.Println("版本序列化 ok")
 }
