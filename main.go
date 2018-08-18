@@ -55,6 +55,7 @@ func main() {
 		showStatus()
 	case COMMAND_RESTART:
 		restartApp(*appName)
+		ver.WriteStart()
 	case COMMAND_STOP:
 		stopApp(*appName)
 	case COMMAND_VER_DEV:
@@ -260,7 +261,7 @@ func logVersion(v, mode string) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	appV := ver.AppVersion{mode, v, dateNow, branch, commitId}
+	appV := ver.AppVersion{Model: mode, Version: v, DateNow: dateNow, Branch: branch, CommitId: commitId}
 	appV.WriteVersion()
 	fmt.Println("版本序列化 ok")
 }
