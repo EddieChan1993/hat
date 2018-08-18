@@ -38,6 +38,7 @@ func main() {
 	folderName := folder()
 	version := flag.String("v", "none", "programe's version")
 	appName := flag.String("n", folderName, "programe's name")
+
 	flag.Parse()
 	flag.Usage = usage
 	command = flag.Arg(0)
@@ -145,12 +146,12 @@ func usage() {
 	usageStr += "\n"
 	usageStr += "The commands are:\n"
 	usageStr += "\n"
-	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's programe\n", "-v", "-n", COMMAND_B_DEV, COMMAND_B_DEV)
-	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's programe\n", "-v", "-n", COMMAND_B_PROD, COMMAND_B_PROD)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_START, COMMAND_START)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_RESTART, COMMAND_RESTART)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_STOP, COMMAND_STOP)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s programe\n", "-n", COMMAND_STATUS, COMMAND_STATUS)
+	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's program\n", "-v", "-n", COMMAND_B_DEV, COMMAND_B_DEV)
+	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's program\n", "-v", "-n", COMMAND_B_PROD, COMMAND_B_PROD)
+	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s program\n", "-n", COMMAND_START, COMMAND_START)
+	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s program\n", "-n", COMMAND_RESTART, COMMAND_RESTART)
+	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s program\n", "-n", COMMAND_STOP, COMMAND_STOP)
+	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s program\n", "-n", COMMAND_STATUS, COMMAND_STATUS)
 	usageStr += fmt.Sprintf("	%s							look up help\n", COMMAND_HELP)
 	usageStr += fmt.Sprintf("	%s							look up dev's version log\n", COMMAND_VER_DEV)
 	usageStr += fmt.Sprintf("	%s						look up prod's version log\n", COMMAND_VER_PROD)

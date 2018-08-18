@@ -25,6 +25,25 @@ go get github.com/EddieChan1993/hat
     hat status
 
 ```
+```
+$ hat
+Usage:
+
+        hat [arguments] command
+
+The commands are:
+
+        -v [version_code] -n [app_name|main] dev                create dev's program
+        -v [version_code] -n [app_name|main] prod               create prod's program
+        -n [app_name|main] start                                start program
+        -n [app_name|main] restart                              restart program
+        -n [app_name|main] stop                                 stop program
+        -n [app_name|main] status                               status program
+        help                                                    look up help
+        ver_dev                                                 look up dev's version log
+        ver_prod                                                look up prod's version log
+
+```
 ## 功能特色
 版本日志记录，判断冲突版本，同时列出已经使用版本
 
