@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"strings"
 	ver "github.com/EddieChan1993/hat/version"
+	"runtime"
 )
 
 const COMMAND_B_DEV = "dev"
@@ -34,8 +35,9 @@ var (
 )
 
 func main() {
+	folderName := folder()
 	version := flag.String("v", "none", "programe's version")
-	appName := flag.String("n", "main", "programe's name")
+	appName := flag.String("n", folderName, "programe's name")
 	flag.Parse()
 	flag.Usage = usage
 	command = flag.Arg(0)
@@ -153,6 +155,16 @@ func usage() {
 	usageStr += fmt.Sprintf("	%s							look up dev's version log\n", COMMAND_VER_DEV)
 	usageStr += fmt.Sprintf("	%s						look up prod's version log\n", COMMAND_VER_PROD)
 	fmt.Fprintf(os.Stderr, usageStr)
+}
+
+//获取项目名
+func folder() string {
+	c := "basename $PWD"
+	if runtime.GOOS == `windows` {
+		c = fmt.Sprintf("%s.exe", c)
+	}
+	out, _ := execShellRes(c)
+	return out
 }
 
 //编译加载进度
