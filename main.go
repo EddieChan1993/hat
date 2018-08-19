@@ -147,15 +147,15 @@ func usage() {
 	usageStr += "\n"
 	usageStr += "The commands are:\n"
 	usageStr += "\n"
-	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's program\n", "-v", "-n", COMMAND_B_DEV, COMMAND_B_DEV)
-	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name|main] %s		create %s's program\n", "-v", "-n", COMMAND_B_PROD, COMMAND_B_PROD)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s program\n", "-n", COMMAND_START, COMMAND_START)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s program\n", "-n", COMMAND_RESTART, COMMAND_RESTART)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s program\n", "-n", COMMAND_STOP, COMMAND_STOP)
-	usageStr += fmt.Sprintf("	%s [app_name|main] %s %36s program\n", "-n", COMMAND_STATUS, COMMAND_STATUS)
-	usageStr += fmt.Sprintf("	%s							look up help\n", COMMAND_HELP)
-	usageStr += fmt.Sprintf("	%s							look up dev's version log\n", COMMAND_VER_DEV)
-	usageStr += fmt.Sprintf("	%s						look up prod's version log\n", COMMAND_VER_PROD)
+	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name] %s	create %s's program  and eg version_code=1.0\n", "-v", "-n", COMMAND_B_DEV, COMMAND_B_DEV)
+	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name] %s	create %s's program\n", "-v", "-n", COMMAND_B_PROD, COMMAND_B_PROD)
+	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program and default app_name=basename $PWD,next eq\n", "-n", COMMAND_START, COMMAND_START)
+	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", COMMAND_RESTART, COMMAND_RESTART)
+	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", COMMAND_STOP, COMMAND_STOP)
+	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", COMMAND_STATUS, COMMAND_STATUS)
+	usageStr += fmt.Sprintf("	%-27s%25s\n", COMMAND_HELP, "look up help")
+	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_DEV,"look up dev's version log")
+	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_PROD,"look up prod's version log")
 	fmt.Fprintf(os.Stderr, usageStr)
 }
 
