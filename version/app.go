@@ -13,7 +13,8 @@ type AppVersion struct {
 	DateNow  string `json:"date_now"`
 	Branch   string `json:"branch"`
 	CommitId string `json:"commit_id"`
-	IsStart  bool   `json:"is_start"`
+	IsUsed   bool   `json:"is_used"`   //是否正在使用
+	IsStatus bool   `json:"is_status"` //当前所处版本
 }
 
 //获取所有dev模式下的版本记录
@@ -21,11 +22,11 @@ func GetVerAllLog(mode string) {
 	fileName, file := getLogFilePullPath("version", "app")
 	defer file.Close()
 	av := jsonRead(fileName)
-	fmt.Println(fmt.Sprintf("【%2s】", mode))
-	fmt.Println(fmt.Sprintf("%2s%s%9s%9s", "", "版本号", "提交ID", "分支"))
+	fmt.Printf("【%2s】\n", mode)
+	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用","时间")
 	for _, v := range av {
 		if v.Model == mode {
-			fmt.Println(fmt.Sprintf("%2s%s%14s%12s", "", v.Version, v.CommitId, v.Branch))
+			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch,v.IsStatus,v.IsUsed,v.DateNow)
 		}
 	}
 }
@@ -45,40 +46,78 @@ func WriteStart() {
 
 //修改运行版本状态
 func switchStart(appV []AppVersion) {
-	count:=len(appV)
+	count := len(appV)
 	for i := 0; i < count; i++ {
-		if i == count-1 {
-			appV[i].IsStart = true
+		if appV[i].IsStatus == true {
+			appV[i].IsUsed = true
 		} else {
-			appV[i].IsStart = false
+			appV[i].IsUsed = false
 		}
 	}
 }
 
+//修改当前编译版本
+func switchStatus(appV []AppVersion, av AppVersion) ([]AppVersion, string) {
+	version := av.Version
+	count := len(appV)
+	flag := false //是否是之前提交ID
+	for i := 0; i < count; i++ {
+		if appV[i].CommitId == av.CommitId && appV[i].Model == av.Model {
+			//模式和提交版本存在一致
+			//标记为当前所处版本
+			appV[i].IsStatus = true
+			appV[i].DateNow = av.DateNow
+			flag = true
+			version = appV[i].Version
+		} else {
+			appV[i].IsStatus = false
+		}
+	}
+
+	if !flag {
+		//新的提交记录
+		appV = append(appV, av)
+	}
+	return appV, version
+}
+
 //版本日志记录
-func (this *AppVersion) WriteVersion() {
+func (this *AppVersion) WriteVersion() string {
 	fileName, file := getLogFilePullPath("version", "app")
 	defer file.Close()
 	u := jsonRead(fileName)
 	this.isExtraVersion(u)
-	av := AppVersion{Model: this.Model, Version: this.Version, DateNow: this.DateNow, Branch: this.Branch, CommitId: this.CommitId, IsStart: false}
-	if len(u)==0 {
+	av := AppVersion{
+		Model:    this.Model,
+		Version:  this.Version,
+		DateNow:  this.DateNow,
+		Branch:   this.Branch,
+		CommitId: this.CommitId,
+		IsStatus: true,
+		IsUsed:   false}
+
+	if len(u) == 0 {
 		//首次发布版本，默认为true
-		av.IsStart=true
+		av.IsUsed = true
+		av.IsStatus = true
 	}
-	u = append(u, av)
+	u, version := switchStatus(u, av)
 	data, err := json.MarshalIndent(u, "", "	 ")
 	if err != nil {
 		log.Fatalln(err)
 	}
 	jsonWrite(file, data)
+	return version
 }
 
 //是否已经使用当前版本
 func (this *AppVersion) isExtraVersion(av []AppVersion) {
 	for _, v := range av {
-		if v.Model == this.Model && (v.Version == this.Version || v.CommitId == this.CommitId) {
-			fmt.Println(" 版本号或提交ID冲突,已发布程序记录:\n【", this.Version, "】【", this.CommitId, "】【", this.Model, "】")
+		if v.Model == this.Model && v.CommitId == this.CommitId {
+			break
+		}
+		if v.Model == this.Model && v.Version == this.Version {
+			fmt.Println(" 版本号冲突,已发布程序记录:\n【", this.Version, "】【", this.CommitId, "】【", this.Model, "】")
 			this.getAllVersion(av)
 			os.Exit(1)
 		}
@@ -88,10 +127,10 @@ func (this *AppVersion) isExtraVersion(av []AppVersion) {
 //获取所有版本
 func (this *AppVersion) getAllVersion(av []AppVersion) {
 	fmt.Println("")
-	fmt.Println(fmt.Sprintf("%2s%s%9s%9s", "", "版本号", "提交ID", "分支"))
+	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用","时间")
 	for _, v := range av {
 		if v.Model == this.Model {
-			fmt.Println(fmt.Sprintf("%2s%s%14s%12s", "", v.Version, v.CommitId, v.Branch))
+			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch,v.IsStatus,v.IsUsed,v.DateNow)
 		}
 	}
 }

@@ -86,8 +86,8 @@ func stopApp(appName string) {
 //编译生成开发环境程序
 func buildDev(v, appName string) {
 	buildCond(v, appName)
+	v = logVersion(v, env[COMMAND_B_DEV])
 	v = fmt.Sprintf("v%s", v)
-	logVersion(v, env[COMMAND_B_DEV])
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_DEV], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -o %s", versionStr, appName)
@@ -97,8 +97,8 @@ func buildDev(v, appName string) {
 //编译生成开发环境程序
 func buildProd(v, appName string) {
 	buildCond(v, appName)
+	v = logVersion(v, env[COMMAND_B_PROD])
 	v = fmt.Sprintf("v%s", v)
-	logVersion(v, env[COMMAND_B_PROD])
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_PROD], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -tags=prod -o %s", versionStr, appName)
@@ -154,8 +154,8 @@ func usage() {
 	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", COMMAND_STOP, COMMAND_STOP)
 	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", COMMAND_STATUS, COMMAND_STATUS)
 	usageStr += fmt.Sprintf("	%-27s%25s\n", COMMAND_HELP, "look up help")
-	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_DEV,"look up dev's version log")
-	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_PROD,"look up prod's version log")
+	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_DEV, "look up dev's version log")
+	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_PROD, "look up prod's version log")
 	fmt.Fprintf(os.Stderr, usageStr)
 }
 
@@ -246,7 +246,7 @@ func checkErr(err error, out string) {
 }
 
 //序列化版本
-func logVersion(v, mode string) {
+func logVersion(v, mode string) string {
 	dateNow := time.Now().Format(YMD_HIS)
 	cmdStr := `git rev-parse --abbrev-ref HEAD`
 	branch, err := execShellRes(cmdStr)
@@ -262,6 +262,7 @@ func logVersion(v, mode string) {
 		os.Exit(1)
 	}
 	appV := ver.AppVersion{Model: mode, Version: v, DateNow: dateNow, Branch: branch, CommitId: commitId}
-	appV.WriteVersion()
+	version := appV.WriteVersion()
 	fmt.Println("版本序列化 ok")
+	return version
 }
