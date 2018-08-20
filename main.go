@@ -261,7 +261,13 @@ func logVersion(v, mode string) string {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	appV := ver.AppVersion{Model: mode, Version: v, DateNow: dateNow, Branch: branch, CommitId: commitId}
+	appV := ver.AppVersion{
+		Model:    mode,
+		Version:  v,
+		DateNow:  dateNow,
+		Branch:   branch,
+		CommitId: commitId}
+
 	version := appV.WriteVersion()
 	fmt.Println("版本序列化 ok")
 	return version
