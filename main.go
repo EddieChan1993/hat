@@ -107,9 +107,9 @@ func buildProd(v, appName string) {
 func nohupApp(appName string) {
 	fmt.Println("please CTRL+D")
 	isExtraAppName(appName)
-	c := fmt.Sprintf(`nohup ./hatgo &`)
-	fmt.Println(c)
-	execShell(c)
+	//c := fmt.Sprintf(`nohup ./hatgo &`)
+	//fmt.Println(c)
+	execShell("nohup ./hatgo &")
 }
 
 //查看运行状态
