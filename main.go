@@ -80,7 +80,13 @@ func restartApp(appName string) {
 func stopApp(appName string) {
 	isExtraAppName(appName)
 	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill {}", appName)
-	execShell(c)
+	cmd:=exec.Command(c)
+	if _, err := cmd.Output(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println("success")
+	//execShell(c)
 }
 
 //编译生成开发环境程序
@@ -108,7 +114,9 @@ func buildProd(v, appName string) {
 func nohupApp(appName string) {
 	fmt.Println("please CTRL+Z")
 	isExtraAppName(appName)
-	c := fmt.Sprintf("nohup ./%s &", appName)
+	c1 := fmt.Sprintf("nohup ./%s &", appName)
+	c2 := fmt.Sprintf("tail -f nohup.out")
+	c := fmt.Sprintf("%s;%s", c1, c2)
 	execShell(c)
 }
 
