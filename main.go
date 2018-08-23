@@ -78,7 +78,7 @@ func restartApp(appName string) {
 //关闭程序
 func stopApp(appName string) {
 	isExtraAppName(appName)
-	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}",appName)
+	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
 	execShell(c)
 }
 
@@ -108,7 +108,7 @@ func nohupApp(appName string) {
 	fmt.Println("please CTRL+D")
 	isExtraAppName(appName)
 	c := fmt.Sprintf(`nohup ./hatgo &`)
-	cmd:=exec.Command("sh","-c", c)
+	cmd := exec.Command("sh", "-c", "nohup", "./hatgo", "&")
 	cmd.Output()
 
 	fmt.Println(c)
