@@ -79,15 +79,8 @@ func restartApp(appName string) {
 //关闭程序
 func stopApp(appName string) {
 	isExtraAppName(appName)
-	fmt.Println(appName)
-	c := fmt.Sprintf("ps aux | grep \"hatgo\" | grep -v grep | awk '{print $2}' | xargs -i kill {}")
-	cmd:=exec.Command("sh","-c",c)
-	if _, err := cmd.Output(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println("success")
-	//execShell(c)
+	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill {}",appName)
+	execShell(c)
 }
 
 //编译生成开发环境程序
