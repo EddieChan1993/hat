@@ -80,7 +80,7 @@ func restartApp(appName string) {
 func stopApp(appName string) {
 	isExtraAppName(appName)
 
-	c := fmt.Sprintf("ps aux | grep %s | grep -v grep | awk '{print $2}' | xargs -i kill {}", appName)
+	c := fmt.Sprintf("ps aux | grep \"hatgo\" | grep -v grep | awk '{print $2}' | xargs -i kill {}")
 	cmd:=exec.Command("sh","-c",c)
 	if _, err := cmd.Output(); err != nil {
 		fmt.Println(err)
