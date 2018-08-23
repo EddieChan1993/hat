@@ -49,7 +49,7 @@ func main() {
 		buildProd(*version, *appName)
 	case COMMAND_START:
 		nohupApp(*appName)
-		showStatus()
+		//showStatus()
 	case COMMAND_STATUS:
 		showStatus()
 	case COMMAND_RESTART:
