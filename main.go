@@ -79,7 +79,7 @@ func restartApp(appName string) {
 //关闭程序
 func stopApp(appName string) {
 	isExtraAppName(appName)
-
+	fmt.Println(appName)
 	c := fmt.Sprintf("ps aux | grep \"hatgo\" | grep -v grep | awk '{print $2}' | xargs -i kill {}")
 	cmd:=exec.Command("sh","-c",c)
 	if _, err := cmd.Output(); err != nil {
@@ -171,10 +171,11 @@ func usage() {
 //获取项目名
 func folder() string {
 	c := "basename $PWD"
-	if runtime.GOOS == `windows` {
-		c = fmt.Sprintf("%s.exe", c)
-	}
 	out, _ := execShellRes(c)
+	out = strings.Replace(out, "\n", "", -1)
+	if runtime.GOOS == `windows` {
+		out = fmt.Sprintf("%s.exe", out)
+	}
 	return out
 }
 
