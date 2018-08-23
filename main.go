@@ -108,11 +108,8 @@ func nohupApp(appName string) {
 	fmt.Println("please CTRL+D")
 	isExtraAppName(appName)
 	c := fmt.Sprintf(`nohup ./hatgo &`)
-	cmd := exec.Command("sh", "-c", "nohup", "./hatgo", "&")
-	cmd.Output()
-
 	fmt.Println(c)
-	//execShell(c)
+	execShell(c)
 }
 
 //查看运行状态
