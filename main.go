@@ -38,7 +38,6 @@ func main() {
 	folderName := folder()
 	version := flag.String("v", "none", "programe's version")
 	appName := flag.String("n", folderName, "programe's name")
-	c := fmt.Sprintf("nohup ./%s &", appName)
 	flag.Parse()
 	flag.Usage = usage
 	command = flag.Arg(0)
