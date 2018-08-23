@@ -79,8 +79,9 @@ func restartApp(appName string) {
 //关闭程序
 func stopApp(appName string) {
 	isExtraAppName(appName)
-	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill {}", appName)
-	cmd:=exec.Command(c)
+
+	c := fmt.Sprintf("ps aux | grep %s | grep -v grep | awk '{print $2}' | xargs -i kill {}", appName)
+	cmd:=exec.Command("sh","-c",c)
 	if _, err := cmd.Output(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
