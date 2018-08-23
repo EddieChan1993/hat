@@ -108,9 +108,7 @@ func buildProd(v, appName string) {
 func nohupApp(appName string) {
 	fmt.Println("please CTRL+Z")
 	isExtraAppName(appName)
-	c1 := fmt.Sprintf("nohup ./%s &", appName)
-	c2 := fmt.Sprintf("tail -f nohup.out")
-	c := fmt.Sprintf("%s;%s", c1, c2)
+	c := fmt.Sprintf("nohup ./%s &", appName)
 	execShell(c)
 }
 
