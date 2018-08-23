@@ -57,7 +57,7 @@ restartApp(){
 
 #关闭应用
 stopApp(){
-    ps aux | grep "${appName}" | grep -v grep | awk '{print $2}' | xargs -i kill {}
+    ps aux | grep "${appName}" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}
 }
 
 #帮助
