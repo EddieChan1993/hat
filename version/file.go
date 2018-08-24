@@ -20,21 +20,26 @@ func getLogFilePath(logFileName string) string {
 }
 
 //获取全路径
-func getLogFilePullPath(logPathName, logFileName string) (string,*os.File) {
+func getLogFilePullPath(logPathName, logFileName, cmd string) (string, *os.File) {
 	prefixPath := getLogFilePath(logPathName)
 	suffixPath := fmt.Sprintf("%s.%s", logFileName, logFileExt)
 
 	filePath := fmt.Sprintf("%s/%s", prefixPath, suffixPath)
-	file:=openLogFile(logPathName, filePath)
-	return filePath,file
+	file := openLogFile(logPathName, filePath, cmd)
+	return filePath, file
 }
 
 //判断文件路径是否正确
-func openLogFile(logPathName, filePath string) *os.File {
+func openLogFile(logPathName, filePath, cmd string) *os.File {
 	_, err := os.Stat(filePath)
 	switch {
 	case os.IsNotExist(err):
-		mkDir(getLogFilePath(logPathName))
+		if cmd == COMMAND_VER_DEV || cmd == COMMAND_VER_PROD || cmd == COMMAND_VERS {
+			fmt.Println("不存在版本文件，请查看当前路径")
+			os.Exit(1)
+		} else {
+			mkDir(getLogFilePath(logPathName))
+		}
 	case os.IsPermission(err):
 		log.Fatalf("Permission:%v", err)
 	}
@@ -69,7 +74,7 @@ func jsonRead(filename string) []AppVersion {
 }
 
 //写入json文件
-func jsonWrite(fp *os.File,data []byte) {
+func jsonWrite(fp *os.File, data []byte) {
 	_, err := fp.Write(data)
 	if err != nil {
 		log.Fatal(err)

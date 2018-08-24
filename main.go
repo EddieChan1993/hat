@@ -14,24 +14,13 @@ import (
 	"runtime"
 )
 
-const COMMAND_B_DEV = "dev"
-const COMMAND_B_PROD = "prod"
-const COMMAND_START = "start"
-const COMMAND_STATUS = "status"
-const COMMAND_RESTART = "restart"
-const COMMAND_STOP = "stop"
-const COMMAND_HELP = "help"
-const COMMAND_VER_DEV = "ver_dev"
-const COMMAND_VER_PROD = "ver_prod"
-const COMMAND_VERS = "vers"
-
 const YMD_HIS = "2006-01-02 15:04:05"
 
 var (
 	usageStr, command string
 	env               = map[string]string{
-		COMMAND_B_DEV:  "开发模式",
-		COMMAND_B_PROD: "生产模式",
+		ver.COMMAND_B_DEV:  "开发模式",
+		ver.COMMAND_B_PROD: "生产模式",
 	}
 )
 
@@ -44,28 +33,28 @@ func main() {
 	command = flag.Arg(0)
 
 	switch command {
-	case COMMAND_B_DEV:
+	case ver.COMMAND_B_DEV:
 		buildDev(*version, *appName)
-	case COMMAND_B_PROD:
+	case ver.COMMAND_B_PROD:
 		buildProd(*version, *appName)
-	case COMMAND_START:
+	case ver.COMMAND_START:
 		nohupApp(*appName)
 		//showStatus()
-	case COMMAND_STATUS:
+	case ver.COMMAND_STATUS:
 		showStatus()
-	case COMMAND_RESTART:
+	case ver.COMMAND_RESTART:
 		restartApp(*appName)
-		ver.WriteStart()
-	case COMMAND_STOP:
+		ver.WriteStart(command)
+	case ver.COMMAND_STOP:
 		stopApp(*appName)
-		ver.WriteStop()
-	case COMMAND_VER_DEV:
-		ver.GetVerAllLog(env[COMMAND_B_DEV])
-	case COMMAND_VER_PROD:
-		ver.GetVerAllLog(env[COMMAND_B_PROD])
-	case COMMAND_VERS:
-		ver.GetVerAllLog("")
-	case COMMAND_HELP:
+		ver.WriteStop(command)
+	case ver.COMMAND_VER_DEV:
+		ver.GetVerAllLog(env[command], command)
+	case ver.COMMAND_VER_PROD:
+		ver.GetVerAllLog(env[command], command)
+	case ver.COMMAND_VERS:
+		ver.GetVerAllLog("", command)
+	case ver.COMMAND_HELP:
 		flag.Usage()
 	default:
 		flag.Usage()
@@ -93,9 +82,9 @@ func stopApp(appName string) {
 //编译生成开发环境程序
 func buildDev(v, appName string) {
 	buildCond(v, appName)
-	v = logVersion(v, env[COMMAND_B_DEV])
+	v = logVersion(v, env[ver.COMMAND_B_DEV], ver.COMMAND_B_DEV)
 	v = fmt.Sprintf("v%s", v)
-	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_DEV], v, appName))
+	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[ver.COMMAND_B_DEV], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -o %s", versionStr, appName)
 	execShell(c)
@@ -104,9 +93,9 @@ func buildDev(v, appName string) {
 //编译生成开发环境程序
 func buildProd(v, appName string) {
 	buildCond(v, appName)
-	v = logVersion(v, env[COMMAND_B_PROD])
+	v = logVersion(v, env[ver.COMMAND_B_PROD], ver.COMMAND_B_PROD)
 	v = fmt.Sprintf("v%s", v)
-	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[COMMAND_B_PROD], v, appName))
+	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[ver.COMMAND_B_PROD], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -tags=prod -o %s", versionStr, appName)
 	execShell(c)
@@ -173,7 +162,7 @@ func isExtraMain() {
 	out = fmt.Sprintf("%s/%s", out, "main.go")
 	_, err := os.Stat(out)
 	if err != nil {
-		fmt.Println("入口文件不存在")
+		fmt.Println("入口文件不存在，无法编译")
 		os.Exit(1)
 
 	}
@@ -186,16 +175,16 @@ func usage() {
 	usageStr += "\n"
 	usageStr += "The commands are:\n"
 	usageStr += "\n"
-	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name] %s	create %s's program  and eg version_code=1.0\n", "-v", "-n", COMMAND_B_DEV, COMMAND_B_DEV)
-	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name] %s	create %s's program\n", "-v", "-n", COMMAND_B_PROD, COMMAND_B_PROD)
-	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program and default app_name=basename $PWD,next eq\n", "-n", COMMAND_START, COMMAND_START)
-	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", COMMAND_RESTART, COMMAND_RESTART)
-	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", COMMAND_STOP, COMMAND_STOP)
-	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", COMMAND_STATUS, COMMAND_STATUS)
-	usageStr += fmt.Sprintf("	%-27s%25s\n", COMMAND_HELP, "look up help")
-	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_DEV, "look up dev's version log")
-	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_PROD, "look up prod's version log")
-	usageStr += fmt.Sprintf("	%-40s%23s\n", COMMAND_VERS, "look up all version log")
+	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name] %s	create %s's program  and eg version_code=1.0\n", "-v", "-n", ver.COMMAND_B_DEV, ver.COMMAND_B_DEV)
+	usageStr += fmt.Sprintf("	%s [version_code] %s [app_name] %s	create %s's program\n", "-v", "-n", ver.COMMAND_B_PROD, ver.COMMAND_B_PROD)
+	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program and default app_name=basename $PWD,next eq\n", "-n", ver.COMMAND_START, ver.COMMAND_START)
+	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", ver.COMMAND_RESTART, ver.COMMAND_RESTART)
+	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", ver.COMMAND_STOP, ver.COMMAND_STOP)
+	usageStr += fmt.Sprintf("	%s [app_name] %s %25s program\n", "-n", ver.COMMAND_STATUS, ver.COMMAND_STATUS)
+	usageStr += fmt.Sprintf("	%-27s%25s\n", ver.COMMAND_HELP, "look up help")
+	usageStr += fmt.Sprintf("	%-40s%25s\n", ver.COMMAND_VER_DEV, "look up dev's version log")
+	usageStr += fmt.Sprintf("	%-40s%25s\n", ver.COMMAND_VER_PROD, "look up prod's version log")
+	usageStr += fmt.Sprintf("	%-40s%23s\n", ver.COMMAND_VERS, "look up all version log")
 	fmt.Fprintf(os.Stderr, usageStr)
 }
 
@@ -289,7 +278,7 @@ func checkErr(err error, out string) {
 }
 
 //序列化版本
-func logVersion(v, mode string) string {
+func logVersion(v, mode, cmd string) string {
 	dateNow := time.Now().Format(YMD_HIS)
 	cmdStr := `git rev-parse --abbrev-ref HEAD`
 	branch, err := execShellRes(cmdStr)
@@ -311,7 +300,7 @@ func logVersion(v, mode string) string {
 		Branch:   branch,
 		CommitId: commitId}
 
-	version := appV.WriteVersion()
+	version := appV.WriteVersion(cmd)
 	fmt.Println("版本序列化 ok")
 	return version
 }
