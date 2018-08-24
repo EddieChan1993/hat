@@ -35,9 +35,9 @@ var (
 )
 
 func main() {
-	folderName := folder()
+	app := folder()
 	version := flag.String("v", "none", "programe's version")
-	appName := flag.String("n", folderName, "programe's name")
+	appName := flag.String("n", app, "programe's name")
 	flag.Parse()
 	flag.Usage = usage
 	command = flag.Arg(0)
@@ -79,6 +79,7 @@ func restartApp(appName string) {
 func stopApp(appName string) {
 	isExtraAppName(appName)
 	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
+	fmt.Println(c)
 	execShell(c)
 }
 
@@ -107,9 +108,9 @@ func buildProd(v, appName string) {
 func nohupApp(appName string) {
 	fmt.Println("please CTRL+D")
 	isExtraAppName(appName)
-	//c := fmt.Sprintf(`nohup ./hatgo &`)
+	c := fmt.Sprintf("nohup ./%s &", appName)
 	//fmt.Println(c)
-	execShell("nohup ./hatgo")
+	execShell(c)
 }
 
 //查看运行状态
@@ -160,6 +161,7 @@ func usage() {
 }
 
 //获取项目名
+//sys 考虑当前操作系统
 func folder() string {
 	c := "basename $PWD"
 	out, _ := execShellRes(c)
@@ -213,11 +215,11 @@ func execShell(s string) {
 	//函数返回一个*Cmd，用于使用给出的参数执行name指定的程序
 	cmd := exec.Command("sh", "-c", s)
 	//读取io.Writer类型的cmd.Stdout，再通过bytes.Buffer(缓冲byte类型的缓冲器)将byte类型转化为string类型(out.String():这是bytes类型提供的接口)
-	var out bytes.Buffer
-	cmd.Stdout = &out
+	//var out bytes.Buffer
+	//cmd.Stdout = &out
 	//Run执行c包含的命令，并阻塞直到完成。  这里stdout被取出，cmd.Wait()无法正确获取stdin,stdout,stderr，则阻塞在那了
 	err := cmd.Run()
-	checkErr(err, out.String())
+	checkErr(err, "")
 }
 
 //阻塞式的执行外部shell命令的函数,等待执行完毕并返回标准输出，有返回值
