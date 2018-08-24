@@ -130,6 +130,7 @@ func showStatus() {
 func buildCond(version, appName string) {
 	isExtraAppName(appName)
 	isExtraVersion(version)
+	isExtraMain()
 }
 
 func isExtraVersion(version string) {
@@ -148,6 +149,7 @@ func isExtraAppName(appName string) {
 	}
 }
 
+//是否存在执行应用
 func isExtraApp(appName string)  {
 	c := "pwd"
 	out, _ := execShellRes(c)
@@ -156,7 +158,21 @@ func isExtraApp(appName string)  {
 	out=fmt.Sprintf("%s/%s",out,appName)
 	_,err :=os.Stat(out)
 	if err != nil {
-		fmt.Println("应用文件不存在")
+		fmt.Println("执行应用文件不存在")
+		os.Exit(1)
+
+	}
+}
+
+func isExtraMain()  {
+	c := "pwd"
+	out, _ := execShellRes(c)
+	out = strings.Replace(out, "\n", "", -1)
+
+	out=fmt.Sprintf("%s/%s",out,"main.go")
+	_,err :=os.Stat(out)
+	if err != nil {
+		fmt.Println("入口文件不存在")
 		os.Exit(1)
 
 	}
