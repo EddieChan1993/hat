@@ -23,7 +23,7 @@ const COMMAND_STOP = "stop"
 const COMMAND_HELP = "help"
 const COMMAND_VER_DEV = "ver_dev"
 const COMMAND_VER_PROD = "ver_prod"
-const COMMAND_VERS= "vers"
+const COMMAND_VERS = "vers"
 
 const YMD_HIS = "2006-01-02 15:04:05"
 
@@ -58,6 +58,7 @@ func main() {
 		ver.WriteStart()
 	case COMMAND_STOP:
 		stopApp(*appName)
+		ver.WriteStop()
 	case COMMAND_VER_DEV:
 		ver.GetVerAllLog(env[COMMAND_B_DEV])
 	case COMMAND_VER_PROD:
@@ -150,13 +151,13 @@ func isExtraAppName(appName string) {
 }
 
 //是否存在执行应用
-func isExtraApp(appName string)  {
+func isExtraApp(appName string) {
 	c := "pwd"
 	out, _ := execShellRes(c)
 	out = strings.Replace(out, "\n", "", -1)
 
-	out=fmt.Sprintf("%s/%s",out,appName)
-	_,err :=os.Stat(out)
+	out = fmt.Sprintf("%s/%s", out, appName)
+	_, err := os.Stat(out)
 	if err != nil {
 		fmt.Println("执行应用文件不存在")
 		os.Exit(1)
@@ -164,13 +165,13 @@ func isExtraApp(appName string)  {
 	}
 }
 
-func isExtraMain()  {
+func isExtraMain() {
 	c := "pwd"
 	out, _ := execShellRes(c)
 	out = strings.Replace(out, "\n", "", -1)
 
-	out=fmt.Sprintf("%s/%s",out,"main.go")
-	_,err :=os.Stat(out)
+	out = fmt.Sprintf("%s/%s", out, "main.go")
+	_, err := os.Stat(out)
 	if err != nil {
 		fmt.Println("入口文件不存在")
 		os.Exit(1)

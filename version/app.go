@@ -49,6 +49,20 @@ func WriteStart() {
 	jsonWrite(file, data)
 }
 
+//停止应用
+func WriteStop() {
+	fileName, file := getLogFilePullPath("version", "app")
+	defer file.Close()
+	av := jsonRead(fileName)
+	switchStop(av)
+	data, err := json.MarshalIndent(av, "", "	 ")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	jsonWrite(file, data)
+}
+
+
 //修改运行版本状态
 func switchStart(appV []AppVersion) {
 	count := len(appV)
@@ -56,6 +70,16 @@ func switchStart(appV []AppVersion) {
 		if appV[i].IsStatus == true {
 			appV[i].IsUsed = true
 		} else {
+			appV[i].IsUsed = false
+		}
+	}
+}
+
+//修改运行版本状态
+func switchStop(appV []AppVersion) {
+	count := len(appV)
+	for i := 0; i < count; i++ {
+		if appV[i].IsUsed == true {
 			appV[i].IsUsed = false
 		}
 	}
