@@ -23,6 +23,7 @@ const COMMAND_STOP = "stop"
 const COMMAND_HELP = "help"
 const COMMAND_VER_DEV = "ver_dev"
 const COMMAND_VER_PROD = "ver_prod"
+const COMMAND_VERS= "vers"
 
 const YMD_HIS = "2006-01-02 15:04:05"
 
@@ -61,6 +62,8 @@ func main() {
 		ver.GetVerAllLog(env[COMMAND_B_DEV])
 	case COMMAND_VER_PROD:
 		ver.GetVerAllLog(env[COMMAND_B_PROD])
+	case COMMAND_VERS:
+		ver.GetVerAllLog("")
 	case COMMAND_HELP:
 		flag.Usage()
 	default:
@@ -168,6 +171,7 @@ func usage() {
 	usageStr += fmt.Sprintf("	%-27s%25s\n", COMMAND_HELP, "look up help")
 	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_DEV, "look up dev's version log")
 	usageStr += fmt.Sprintf("	%-40s%25s\n", COMMAND_VER_PROD, "look up prod's version log")
+	usageStr += fmt.Sprintf("	%-40s%23s\n", COMMAND_VERS, "look up all version log")
 	fmt.Fprintf(os.Stderr, usageStr)
 }
 

@@ -23,10 +23,17 @@ func GetVerAllLog(mode string) {
 	defer file.Close()
 	av := jsonRead(fileName)
 	fmt.Printf("【%2s】\n", mode)
-	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用","时间")
-	for _, v := range av {
-		if v.Model == mode {
-			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch,v.IsStatus,v.IsUsed,v.DateNow)
+	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间")
+
+	if mode == "" {
+		for _, v := range av {
+			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
+		}
+	} else {
+		for _, v := range av {
+			if v.Model == mode {
+				fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
+			}
 		}
 	}
 }
@@ -127,10 +134,10 @@ func (this *AppVersion) isExtraVersion(av []AppVersion) {
 //获取所有版本
 func (this *AppVersion) getAllVersion(av []AppVersion) {
 	fmt.Println("")
-	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用","时间")
+	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间")
 	for _, v := range av {
 		if v.Model == this.Model {
-			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch,v.IsStatus,v.IsUsed,v.DateNow)
+			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
 		}
 	}
 }
