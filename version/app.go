@@ -22,17 +22,18 @@ func GetVerAllLog(mode string) {
 	fileName, file := getLogFilePullPath("version", "app")
 	defer file.Close()
 	av := jsonRead(fileName)
-	fmt.Printf("【%2s】\n", mode)
-	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间")
-
 	if mode == "" {
+		fmt.Printf("【%2s】\n", "ALL")
+		fmt.Printf("%2s%s%9s%9s%9s%9s%9s%7s\n", "", "版本号","模式", "提交ID", "分支", "当前版本", "正在使用", "时间")
 		for _, v := range av {
-			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
+			fmt.Printf("%2s%-11s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.Model,v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
 		}
 	} else {
+		fmt.Printf("【%2s】\n", mode)
+		fmt.Printf("%2s%s%9s%9s%9s%9s%9s%7s\n", "", "版本号","模式", "提交ID", "分支", "当前版本", "正在使用", "时间")
 		for _, v := range av {
 			if v.Model == mode {
-				fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
+				fmt.Printf("%2s%-11s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.Model,v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
 			}
 		}
 	}
