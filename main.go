@@ -74,6 +74,8 @@ func main() {
 //平滑重启程序
 func restartApp(appName string) {
 	isExtraAppName(appName)
+	isExtraApp(appName)
+
 	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -1 {}", appName)
 	execShell(c)
 }
@@ -81,6 +83,8 @@ func restartApp(appName string) {
 //关闭程序
 func stopApp(appName string) {
 	isExtraAppName(appName)
+	isExtraApp(appName)
+
 	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
 	execShell(c)
 }
@@ -110,6 +114,7 @@ func buildProd(v, appName string) {
 func nohupApp(appName string) {
 	//fmt.Println("please CTRL+D")
 	isExtraAppName(appName)
+	isExtraApp(appName)
 	c := fmt.Sprintf("nohup ./%s &", appName)
 	//fmt.Println(c)
 	execShell(c)
@@ -141,6 +146,9 @@ func isExtraAppName(appName string) {
 		usage()
 		os.Exit(1)
 	}
+}
+
+func isExtraApp(appName string)  {
 	c := "pwd"
 	out, _ := execShellRes(c)
 	out = strings.Replace(out, "\n", "", -1)
