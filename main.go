@@ -39,6 +39,7 @@ func main() {
 		buildProd(*version, *appName)
 	case ver.COMMAND_START:
 		nohupApp(*appName)
+		ver.WriteStart(command)
 		//showStatus()
 	case ver.COMMAND_STATUS:
 		showStatus()
