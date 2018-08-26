@@ -109,7 +109,7 @@ func nohupApp(appName string) {
 	isExtraAppName(appName)
 	//c := fmt.Sprintf(`nohup ./hatgo &`)
 	//fmt.Println(c)
-	execShell("nohup ./hatgo")
+	execShell("nohup ./hatgo &")
 }
 
 //查看运行状态
