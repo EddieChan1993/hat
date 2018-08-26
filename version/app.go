@@ -18,25 +18,43 @@ type AppVersion struct {
 }
 
 //获取所有dev模式下的版本记录
-func GetVerAllLog(mode string) {
-	fileName, file := getLogFilePullPath("version", "app")
+func GetVerAllLog(mode,cmd string) {
+	fileName, file := getLogFilePullPath("version", "app",cmd)
 	defer file.Close()
 	av := jsonRead(fileName)
-	fmt.Printf("【%2s】\n", mode)
-	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用","时间")
-	for _, v := range av {
-		if v.Model == mode {
-			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch,v.IsStatus,v.IsUsed,v.DateNow)
+	fmt.Printf("%2s%s%9s%9s%9s%9s%7s%20s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间", "模式")
+	if mode == "" {
+		for _, v := range av {
+			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
+		}
+	} else {
+		for _, v := range av {
+			if v.Model == mode {
+				fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
+			}
 		}
 	}
 }
 
 //记录运行程序
-func WriteStart() {
-	fileName, file := getLogFilePullPath("version", "app")
+func WriteStart(cmd string) {
+	fileName, file := getLogFilePullPath("version", "app",cmd)
 	defer file.Close()
 	av := jsonRead(fileName)
 	switchStart(av)
+	data, err := json.MarshalIndent(av, "", "	 ")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	jsonWrite(file, data)
+}
+
+//停止应用
+func WriteStop(cmd string) {
+	fileName, file := getLogFilePullPath("version", "app", cmd)
+	defer file.Close()
+	av := jsonRead(fileName)
+	switchStop(av)
 	data, err := json.MarshalIndent(av, "", "	 ")
 	if err != nil {
 		log.Fatalln(err)
@@ -51,6 +69,16 @@ func switchStart(appV []AppVersion) {
 		if appV[i].IsStatus == true {
 			appV[i].IsUsed = true
 		} else {
+			appV[i].IsUsed = false
+		}
+	}
+}
+
+//修改运行版本状态
+func switchStop(appV []AppVersion) {
+	count := len(appV)
+	for i := 0; i < count; i++ {
+		if appV[i].IsUsed == true {
 			appV[i].IsUsed = false
 		}
 	}
@@ -82,8 +110,8 @@ func switchStatus(appV []AppVersion, av AppVersion) ([]AppVersion, string) {
 }
 
 //版本日志记录
-func (this *AppVersion) WriteVersion() string {
-	fileName, file := getLogFilePullPath("version", "app")
+func (this *AppVersion) WriteVersion(cmd string) string {
+	fileName, file := getLogFilePullPath("version", "app", cmd)
 	defer file.Close()
 	u := jsonRead(fileName)
 	this.isExtraVersion(u)
@@ -127,10 +155,10 @@ func (this *AppVersion) isExtraVersion(av []AppVersion) {
 //获取所有版本
 func (this *AppVersion) getAllVersion(av []AppVersion) {
 	fmt.Println("")
-	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用","时间")
+	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间")
 	for _, v := range av {
 		if v.Model == this.Model {
-			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch,v.IsStatus,v.IsUsed,v.DateNow)
+			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
 		}
 	}
 }
