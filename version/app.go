@@ -18,8 +18,8 @@ type AppVersion struct {
 }
 
 //获取所有dev模式下的版本记录
-func GetVerAllLog(mode,cmd string) {
-	fileName, file := getLogFilePullPath("version", "app",cmd)
+func GetVerAllLog(mode, cmd string) {
+	fileName, file := getLogFilePullPath("version", "app", cmd)
 	defer file.Close()
 	av := jsonRead(fileName)
 	fmt.Printf("%2s%s%9s%9s%9s%9s%7s%20s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间", "模式")
@@ -38,7 +38,7 @@ func GetVerAllLog(mode,cmd string) {
 
 //记录运行程序
 func WriteStart(cmd string) {
-	fileName, file := getLogFilePullPath("version", "app",cmd)
+	fileName, file := getLogFilePullPath("version", "app", cmd)
 	defer file.Close()
 	av := jsonRead(fileName)
 	switchStart(av)
@@ -46,7 +46,8 @@ func WriteStart(cmd string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	jsonWrite(file, data)
+	jsonWriteReal(fileName,data)
+	//jsonWrite(file, data)
 }
 
 //停止应用
@@ -59,7 +60,8 @@ func WriteStop(cmd string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	jsonWrite(file, data)
+	jsonWriteReal(fileName,data)
+	//jsonWrite(file, data)
 }
 
 //修改运行版本状态
@@ -109,6 +111,24 @@ func switchStatus(appV []AppVersion, av AppVersion) ([]AppVersion, string) {
 	return appV, version
 }
 
+//获取当前编译版本
+func (this *AppVersion) GetVersion(cmd string) string {
+	fileName, file := getLogFilePullPath("version", "app", cmd)
+	defer file.Close()
+	u := jsonRead(fileName)
+	this.isExtraVersion(u)
+	av := AppVersion{
+		Model:    this.Model,
+		Version:  this.Version,
+		DateNow:  this.DateNow,
+		Branch:   this.Branch,
+		CommitId: this.CommitId,
+		IsStatus: true,
+		IsUsed:   false}
+
+	_, version := switchStatus(u, av)
+	return version
+}
 //版本日志记录
 func (this *AppVersion) WriteVersion(cmd string) string {
 	fileName, file := getLogFilePullPath("version", "app", cmd)
@@ -124,17 +144,13 @@ func (this *AppVersion) WriteVersion(cmd string) string {
 		IsStatus: true,
 		IsUsed:   false}
 
-	if len(u) == 0 {
-		//首次发布版本，默认为true
-		av.IsUsed = true
-		av.IsStatus = true
-	}
 	u, version := switchStatus(u, av)
 	data, err := json.MarshalIndent(u, "", "	 ")
 	if err != nil {
 		log.Fatalln(err)
 	}
-	jsonWrite(file, data)
+	jsonWriteReal(fileName,data)
+	//jsonWrite(file, data)
 	return version
 }
 

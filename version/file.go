@@ -44,7 +44,7 @@ func openLogFile(logPathName, filePath, cmd string) *os.File {
 		log.Fatalf("Permission:%v", err)
 	}
 
-	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_RDWR, 0755)
+	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_RDWR, 0777)
 	if err != nil {
 		log.Fatalf("Fail to CreateFile:%v", err)
 	}
@@ -76,6 +76,13 @@ func jsonRead(filename string) []AppVersion {
 //写入json文件
 func jsonWrite(fp *os.File, data []byte) {
 	_, err := fp.Write(data)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func jsonWriteReal(fp string, data []byte) {
+	err:=ioutil.WriteFile(fp,data,os.ModeAppend)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -40,7 +40,6 @@ func main() {
 	case ver.COMMAND_START:
 		nohupApp(*appName)
 		ver.WriteStart(command)
-		//showStatus()
 	case ver.COMMAND_STATUS:
 		showStatus()
 	case ver.COMMAND_RESTART:
@@ -82,24 +81,29 @@ func stopApp(appName string) {
 
 //编译生成开发环境程序
 func buildDev(v, appName string) {
+	versionName := v
+	fmt.Println(versionName)
 	buildCond(v, appName)
-	v = logVersion(v, env[ver.COMMAND_B_DEV], ver.COMMAND_B_DEV)
+	v = getBuildVer(v, env[ver.COMMAND_B_DEV], ver.COMMAND_B_DEV)
 	v = fmt.Sprintf("v%s", v)
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[ver.COMMAND_B_DEV], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -o %s", versionStr, appName)
 	execShell(c)
+	logVersion(versionName, env[ver.COMMAND_B_DEV], ver.COMMAND_B_DEV)
 }
 
 //编译生成开发环境程序
 func buildProd(v, appName string) {
+	versionName := v
 	buildCond(v, appName)
-	v = logVersion(v, env[ver.COMMAND_B_PROD], ver.COMMAND_B_PROD)
+	v = getBuildVer(v, env[ver.COMMAND_B_PROD], ver.COMMAND_B_PROD)
 	v = fmt.Sprintf("v%s", v)
 	go spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序,版本号:%s,程序名称:%s", env[ver.COMMAND_B_PROD], v, appName))
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -tags=prod -o %s", versionStr, appName)
 	execShell(c)
+	logVersion(versionName, env[ver.COMMAND_B_PROD], ver.COMMAND_B_PROD)
 }
 
 func nohupApp(appName string) {
@@ -276,6 +280,33 @@ func checkErr(err error, out string) {
 	} else {
 		fmt.Println(string(out))
 	}
+}
+
+//获取编译版本
+func getBuildVer(v, mode, cmd string) string {
+	dateNow := time.Now().Format(YMD_HIS)
+	cmdStr := `git rev-parse --abbrev-ref HEAD`
+	branch, err := execShellRes(cmdStr)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	branch = strings.Replace(branch, "\n", "", -1)
+	cmdStr = `git log --pretty=format:"%h" -1`
+	commitId, err := execShellRes(cmdStr)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	appV := ver.AppVersion{
+		Model:    mode,
+		Version:  v,
+		DateNow:  dateNow,
+		Branch:   branch,
+		CommitId: commitId}
+
+	version := appV.GetVersion(cmd)
+	return version
 }
 
 //序列化版本
