@@ -110,7 +110,7 @@ func nohupApp(appName string) {
 	//fmt.Println("please CTRL+D")
 	isExtraAppName(appName)
 	isExtraApp(appName)
-	c := fmt.Sprintf("nohup ./%s &", appName)
+	c := fmt.Sprintf("nohup ./%s > %s 2>&1  &", appName,"nohup.log")
 	//fmt.Println(c)
 	execShell(c)
 }
