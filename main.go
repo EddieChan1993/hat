@@ -40,6 +40,7 @@ func main() {
 	case ver.COMMAND_START:
 		nohupApp(*appName)
 		ver.WriteStart(command)
+		showStatus()
 	case ver.COMMAND_STATUS:
 		showStatus()
 	case ver.COMMAND_RESTART:
