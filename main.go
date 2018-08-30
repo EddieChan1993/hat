@@ -76,10 +76,10 @@ func stopApp(appName string) {
 	ver.ExecShell(c)
 }
 
-func load(appName, v string) {
+func load(buildEnv, appName, v string) {
 	brand := ver.Branch()
 	commitId := ver.CommitId()
-	ver.Spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序\n分支:%s,提交ID:%s\n版本号:%s,程序名称:%s", env[ver.COMMAND_B_DEV], brand, commitId, v, appName))
+	ver.Spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序\n分支:%s,提交ID:%s\n版本号:%s,程序名称:%s", env[buildEnv], brand, commitId, v, appName))
 }
 
 //编译生成开发环境程序
@@ -88,7 +88,7 @@ func buildDev(v, appName string) {
 	buildCond(v, appName)
 	v = getBuildVer(v, env[ver.COMMAND_B_DEV], ver.COMMAND_B_DEV)
 	v = fmt.Sprintf("v%s", v)
-	go load(appName,v)
+	go load(ver.COMMAND_B_DEV, appName, v)
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -o %s", versionStr, appName)
 	ver.ExecShell(c)
@@ -101,7 +101,7 @@ func buildProd(v, appName string) {
 	buildCond(v, appName)
 	v = getBuildVer(v, env[ver.COMMAND_B_PROD], ver.COMMAND_B_PROD)
 	v = fmt.Sprintf("v%s", v)
-	go load(appName,v)
+	go load(ver.COMMAND_B_PROD, appName, v)
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
 	c := fmt.Sprintf("go build -ldflags \"%s\" -tags=prod -o %s", versionStr, appName)
 	ver.ExecShell(c)
