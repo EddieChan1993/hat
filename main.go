@@ -69,10 +69,12 @@ func restartApp(appName string) {
 
 //关闭程序
 func stopApp(appName string) {
+	isExtraMain()
 	isExtraAppName(appName)
 	isExtraApp(appName)
-
-	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
+	return
+	c := ""
+	//c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
 	ver.ExecShell(c)
 }
 
@@ -169,7 +171,7 @@ func isExtraMain() {
 	out = fmt.Sprintf("%s/%s", out, "main.go")
 	_, err := os.Stat(out)
 	if err != nil {
-		fmt.Println("入口文件不存在，无法编译")
+		fmt.Println("入口文件不存在")
 		os.Exit(1)
 
 	}
