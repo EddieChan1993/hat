@@ -72,7 +72,9 @@ func stopApp(appName string) {
 	isExtraMain()
 	isExtraAppName(appName)
 	isExtraApp(appName)
-	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
+	return
+	c := ""
+	//c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
 	ver.ExecShell(c)
 }
 
@@ -90,7 +92,7 @@ func buildDev(v, appName string) {
 	v = fmt.Sprintf("v%s", v)
 	go load(ver.COMMAND_B_DEV, appName, v)
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
-	c := fmt.Sprintf("go build -ldflags \"%s\" -o %s", versionStr, appName)
+	c := fmt.Sprintf("go build -ldflags \"%s\" -o %s >> nohup.out 2>&1", versionStr, appName)
 	ver.ExecShell(c)
 	logVersion(versionName, env[ver.COMMAND_B_DEV], ver.COMMAND_B_DEV)
 }
@@ -103,7 +105,7 @@ func buildProd(v, appName string) {
 	v = fmt.Sprintf("v%s", v)
 	go load(ver.COMMAND_B_PROD, appName, v)
 	versionStr := fmt.Sprintf("-X main._version_=%s", v)
-	c := fmt.Sprintf("go build -ldflags \"%s\" -tags=prod -o %s", versionStr, appName)
+	c := fmt.Sprintf("go build -ldflags \"%s\" -tags=prod -o %s >> nohup.out 2>&1", versionStr, appName)
 	ver.ExecShell(c)
 	logVersion(versionName, env[ver.COMMAND_B_PROD], ver.COMMAND_B_PROD)
 }
@@ -112,7 +114,7 @@ func nohupApp(appName string) {
 	isExtraAppName(appName)
 	isExtraApp(appName)
 	fmt.Println("please CTRL+Z")
-	c := fmt.Sprintf("nohup ./%s &", appName)
+	c := fmt.Sprintf("nohup ./%s >> %s &", appName, "nohup.out")
 	//fmt.Println(c)
 	ver.ExecShell(c)
 }
