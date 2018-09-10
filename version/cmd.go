@@ -88,7 +88,7 @@ func ExecCommand(s string) {
 //阻塞式的执行外部shell命令的函数,等待执行完毕并返回标准输出
 func ExecShell(s string) {
 	//函数返回一个*Cmd，用于使用给出的参数执行name指定的程序
-	cmd := exec.Command("sh", "-c", s)
+	cmd := exec.Command("sh", "-c", fmt.Sprintf("%s %s", s, ">& nohup.out"))
 	//读取io.Writer类型的cmd.Stdout，再通过bytes.Buffer(缓冲byte类型的缓冲器)将byte类型转化为string类型(out.String():这是bytes类型提供的接口)
 	//var out bytes.Buffer
 	//cmd.Stdout = &out
@@ -97,10 +97,16 @@ func ExecShell(s string) {
 	checkErr(err, "")
 }
 
+//查看运行状态
+func showStatus() {
+	c := "tail -f nohup.out"
+	ExecCommand(c)
+}
+
 //异常处理
 func checkErr(err error, out string) {
 	if err != nil {
-		fmt.Println(err.Error())
+		showStatus()
 		os.Exit(1)
 	}
 	if out == "" {
@@ -133,4 +139,3 @@ func Spinner(delay time.Duration, title string) {
 		}
 	}
 }
-
