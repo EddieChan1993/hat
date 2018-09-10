@@ -106,7 +106,7 @@ func showStatus() {
 //异常处理
 func checkErr(err error, out string) {
 	if err != nil {
-		fmt.Println(err.Error())
+		showStatus()
 		os.Exit(1)
 	}
 	if out == "" {
