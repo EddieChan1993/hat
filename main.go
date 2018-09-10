@@ -72,9 +72,7 @@ func stopApp(appName string) {
 	isExtraMain()
 	isExtraAppName(appName)
 	isExtraApp(appName)
-	return
-	c := ""
-	//c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
+	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
 	ver.ExecShell(c)
 }
 

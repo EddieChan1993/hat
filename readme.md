@@ -3,7 +3,7 @@
 
 ##  安装
 ```
-go get github.com/EddieChan1993/hat
+go get -u github.com/EddieChan1993/hat
 ```
 ## 使用
 在执行项目的入口文件下执行下面命令
