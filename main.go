@@ -63,7 +63,7 @@ func restartApp(appName string) {
 	isExtraAppName(appName)
 	isExtraApp(appName)
 
-	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -1 {} >> nohup.out 2>&1", appName)
+	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -1 {}  >> nohup.out 2>&1", appName)
 	ver.ExecShell(c)
 }
 
@@ -72,7 +72,7 @@ func stopApp(appName string) {
 	isExtraMain()
 	isExtraAppName(appName)
 	isExtraApp(appName)
-	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}", appName)
+	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}  >> nohup.out 2>&1", appName)
 	ver.ExecShell(c)
 }
 
@@ -112,7 +112,7 @@ func nohupApp(appName string) {
 	isExtraAppName(appName)
 	isExtraApp(appName)
 	fmt.Println("please CTRL+Z")
-	c := fmt.Sprintf("nohup ./%s >> %s &", appName, "nohup.out")
+	c := fmt.Sprintf("nohup ./%s >> %s 2>&1 &", appName, "nohup.out")
 	//fmt.Println(c)
 	ver.ExecShell(c)
 }
