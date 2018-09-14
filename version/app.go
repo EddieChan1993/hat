@@ -22,6 +22,7 @@ func GetVerAllLog(mode, cmd string) {
 	fileName, file := getLogFilePullPath("version", "app", cmd)
 	defer file.Close()
 	av := jsonRead(fileName)
+	fmt.Println(mode)
 	fmt.Printf("%2s%s%9s%9s%9s%9s%7s%20s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间", "模式")
 	if mode == "" {
 		for _, v := range av {

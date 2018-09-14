@@ -14,8 +14,8 @@ const YMD_HIS = "2006-01-02 15:04:05"
 var (
 	usageStr, command string
 	env               = map[string]string{
-		ver.COMMAND_B_DEV:  "开发模式",
-		ver.COMMAND_B_PROD: "生产模式",
+		ver.COMMAND_VER_DEV:  "开发模式",
+		ver.COMMAND_VER_PROD: "生产模式",
 	}
 )
 
