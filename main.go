@@ -14,8 +14,8 @@ const YMD_HIS = "2006-01-02 15:04:05"
 var (
 	usageStr, command string
 	env               = map[string]string{
-		ver.COMMAND_VER_DEV:  "开发模式",
-		ver.COMMAND_VER_PROD: "生产模式",
+		ver.COMMAND_B_DEV:  "开发模式",
+		ver.COMMAND_B_PROD: "生产模式",
 	}
 )
 
@@ -77,6 +77,7 @@ func stopApp(appName string) {
 }
 
 func load(buildEnv, appName, v string) {
+	fmt.Println(buildEnv)
 	brand := ver.Branch()
 	commitId := ver.CommitId()
 	ver.Spinner(100*time.Millisecond, fmt.Sprintf("正在编译【%s】程序\n分支:%s,提交ID:%s\n版本号:%s,程序名称:%s", env[buildEnv], brand, commitId, v, appName))
