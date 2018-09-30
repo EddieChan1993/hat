@@ -46,13 +46,13 @@ func main() {
 		stopApp(*appName)
 		ver.WriteStop(command)
 	case ver.COMMAND_VER_DEV:
-		ver.GetVerAllLog(env[command], command)
+		ver.GetVerLog(ver.VER_PROD, command)
 	case ver.COMMAND_VER_PROD:
-		ver.GetVerAllLog(env[command], command)
+		ver.GetVerLog(ver.VER_DEV, command)
 	case ver.COMMAND_VERS:
-		ver.GetVerAllLog(ver.VER_ALL, command)
+		ver.GetVerLog(ver.VER_ALL, command)
 	case ver.COMMAND_VER:
-		ver.GetVerAllLog(ver.VER_LAST_ONE, command)
+		ver.GetVerLog(ver.VER_LAST_ONE, command)
 	case ver.COMMAND_HELP:
 		flag.Usage()
 	default:

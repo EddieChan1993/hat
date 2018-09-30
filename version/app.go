@@ -18,7 +18,7 @@ type AppVersion struct {
 }
 
 //获取所有dev模式下的版本记录
-func GetVerAllLog(mode, cmd string) {
+func GetVerLog(mode, cmd string) {
 	fileName, file := getLogFilePullPath("version", "app", cmd)
 	defer file.Close()
 	av := jsonRead(fileName)

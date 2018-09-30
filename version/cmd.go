@@ -25,6 +25,8 @@ const COMMAND_VERS = "vers"
 const COMMAND_VER = "ver"
 
 const (
+	VER_PROD     = "开发模式"     //生产
+	VER_DEV      = "生产模式"      //开发
 	VER_LAST_ONE = "last_one" //最后一个版本
 	VER_ALL      = "all"      //所有版本
 )
