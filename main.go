@@ -195,6 +195,7 @@ func usage() {
 	usageStr += fmt.Sprintf("	%-40s%25s\n", ver.COMMAND_VER_DEV, "look up dev's version log")
 	usageStr += fmt.Sprintf("	%-40s%25s\n", ver.COMMAND_VER_PROD, "look up prod's version log")
 	usageStr += fmt.Sprintf("	%-40s%23s\n", ver.COMMAND_VERS, "look up all version log")
+	usageStr += fmt.Sprintf("	%-40s%23s\n", ver.COMMAND_VER, "look up last one version log")
 	fmt.Fprintf(os.Stderr, usageStr)
 }
 
