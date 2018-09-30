@@ -1,14 +1,14 @@
 package version
 
 import (
-	"fmt"
-	"os"
-	"strings"
-	"os/exec"
-	"bytes"
 	"bufio"
+	"bytes"
+	"fmt"
 	"io"
+	"os"
+	"os/exec"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -22,6 +22,12 @@ const COMMAND_HELP = "help"
 const COMMAND_VER_DEV = "ver_dev"
 const COMMAND_VER_PROD = "ver_prod"
 const COMMAND_VERS = "vers"
+const COMMAND_VER = "ver"
+
+const (
+	VER_LAST_ONE = "last_one" //最后一个版本
+	VER_ALL      = "all"      //所有版本
+)
 
 //分支
 func Branch() string {

@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
-	"time"
-	"strings"
 	ver "github.com/EddieChan1993/hat/version"
+	"os"
+	"strings"
+	"time"
 )
 
 const YMD_HIS = "2006-01-02 15:04:05"
@@ -50,7 +50,9 @@ func main() {
 	case ver.COMMAND_VER_PROD:
 		ver.GetVerAllLog(env[command], command)
 	case ver.COMMAND_VERS:
-		ver.GetVerAllLog("", command)
+		ver.GetVerAllLog(ver.VER_ALL, command)
+	case ver.COMMAND_VER:
+		ver.GetVerAllLog(ver.VER_LAST_ONE, command)
 	case ver.COMMAND_HELP:
 		flag.Usage()
 	default:

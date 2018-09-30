@@ -1,10 +1,10 @@
 package version
 
 import (
-	"os"
-	"log"
 	"encoding/json"
 	"fmt"
+	"log"
+	"os"
 )
 
 type AppVersion struct {
@@ -24,10 +24,13 @@ func GetVerAllLog(mode, cmd string) {
 	av := jsonRead(fileName)
 	fmt.Println(mode)
 	fmt.Printf("%2s%s%9s%9s%9s%9s%7s%20s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间", "模式")
-	if mode == "" {
+	if mode == VER_ALL {
 		for _, v := range av {
 			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
 		}
+	} else if mode == VER_LAST_ONE {
+		v := av[len(av)-1]
+		fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
 	} else {
 		for _, v := range av {
 			if v.Model == mode {
@@ -47,7 +50,7 @@ func WriteStart(cmd string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	jsonWriteReal(fileName,data)
+	jsonWriteReal(fileName, data)
 	//jsonWrite(file, data)
 }
 
@@ -61,7 +64,7 @@ func WriteStop(cmd string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	jsonWriteReal(fileName,data)
+	jsonWriteReal(fileName, data)
 	//jsonWrite(file, data)
 }
 
@@ -130,6 +133,7 @@ func (this *AppVersion) GetVersion(cmd string) string {
 	_, version := switchStatus(u, av)
 	return version
 }
+
 //版本日志记录
 func (this *AppVersion) WriteVersion(cmd string) string {
 	fileName, file := getLogFilePullPath("version", "app", cmd)
@@ -150,7 +154,7 @@ func (this *AppVersion) WriteVersion(cmd string) string {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	jsonWriteReal(fileName,data)
+	jsonWriteReal(fileName, data)
 	//jsonWrite(file, data)
 	return version
 }
