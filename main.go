@@ -71,7 +71,7 @@ func restartApp(appName string) {
 
 //关闭程序
 func stopApp(appName string) {
-	isExtraMain()
+	ver.IsExtraMain()
 	isExtraAppName(appName)
 	isExtraApp(appName)
 	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}  >> nohup.out 2>&1", appName)
@@ -130,7 +130,7 @@ func showStatus() {
 func buildCond(version, appName string) {
 	isExtraAppName(appName)
 	isExtraVersion(version)
-	isExtraMain()
+	ver.IsExtraMain()
 }
 
 func isExtraVersion(version string) {
@@ -159,20 +159,6 @@ func isExtraApp(appName string) {
 	_, err := os.Stat(out)
 	if err != nil {
 		fmt.Println("执行应用文件不存在")
-		os.Exit(1)
-
-	}
-}
-
-func isExtraMain() {
-	c := "pwd"
-	out, _ := ver.ExecShellRes(c)
-	out = strings.Replace(out, "\n", "", -1)
-
-	out = fmt.Sprintf("%s/%s", out, "main.go")
-	_, err := os.Stat(out)
-	if err != nil {
-		fmt.Println("入口文件不存在")
 		os.Exit(1)
 
 	}

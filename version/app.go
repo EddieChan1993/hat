@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 type AppVersion struct {
@@ -19,6 +20,7 @@ type AppVersion struct {
 
 //获取所有dev模式下的版本记录
 func GetVerLog(mode, cmd string) {
+	IsExtraMain()
 	fileName, file := getLogFilePullPath("version", "app", cmd)
 	defer file.Close()
 	av := jsonRead(fileName)
@@ -29,8 +31,12 @@ func GetVerLog(mode, cmd string) {
 			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
 		}
 	} else if mode == VER_LAST_ONE {
-		v := av[len(av)-1]
-		fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
+		if len(av)==0{
+			fmt.Println("暂无版本记录")
+		}else{
+			v := av[len(av)-1]
+			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
+		}
 	} else {
 		for _, v := range av {
 			if v.Model == mode {
@@ -181,5 +187,19 @@ func (this *AppVersion) getAllVersion(av []AppVersion) {
 		if v.Model == this.Model {
 			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
 		}
+	}
+}
+
+func IsExtraMain() {
+	c := "pwd"
+	out, _ := ExecShellRes(c)
+	out = strings.Replace(out, "\n", "", -1)
+
+	out = fmt.Sprintf("%s/%s", out, "main.go")
+	_, err := os.Stat(out)
+	if err != nil {
+		fmt.Println("入口文件不存在")
+		os.Exit(1)
+
 	}
 }
