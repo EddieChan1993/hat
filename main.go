@@ -65,7 +65,7 @@ func restartApp(appName string) {
 	isExtraAppName(appName)
 	isExtraApp(appName)
 
-	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -1 {}  >> nohup.out 2>&1", appName)
+	c := fmt.Sprintf("ps aux | grep \"./%s\"  | awk '{print $2}' | xargs -i kill -1 {}  >> nohup.out 2>&1", appName)
 	ver.ExecShell(c)
 }
 
@@ -74,7 +74,7 @@ func stopApp(appName string) {
 	ver.IsExtraMain()
 	isExtraAppName(appName)
 	isExtraApp(appName)
-	c := fmt.Sprintf("ps aux | grep \"%s\" | grep -v grep | awk '{print $2}' | xargs -i kill -9 {}  >> nohup.out 2>&1", appName)
+	c := fmt.Sprintf("ps aux | grep \"./%s\" | awk '{print $2}' | xargs -i kill -9 {}  >> nohup.out 2>&1", appName)
 	ver.ExecShell(c)
 }
 
