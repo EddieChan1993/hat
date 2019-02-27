@@ -39,6 +39,7 @@ func main() {
 	case ver.COMMAND_STATUS:
 		showStatus()
 	case ver.COMMAND_RESTART:
+		fmt.Println("ssss")
 		restartApp(*appName)
 		ver.WriteStart(command)
 		showStatus()
