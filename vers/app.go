@@ -1,4 +1,4 @@
-package version
+package vers
 
 import (
 	"encoding/json"
@@ -14,7 +14,6 @@ type AppVersion struct {
 	DateNow  string `json:"date_now"`
 	Branch   string `json:"branch"`
 	CommitId string `json:"commit_id"`
-	IsUsed   bool   `json:"is_used"`   //是否正在使用
 	IsStatus bool   `json:"is_status"` //当前所处版本
 }
 
@@ -28,70 +27,20 @@ func GetVerLog(mode, cmd string) {
 	fmt.Printf("%2s%s%9s%9s%9s%9s%7s%20s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间", "模式")
 	if mode == VER_ALL {
 		for _, v := range av {
-			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
+			fmt.Printf("%2s%-11s%-13s%-13s%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.DateNow, v.Model)
 		}
 	} else if mode == VER_LAST_ONE {
 		if len(av) == 0 {
 			fmt.Println("暂无版本记录")
 		} else {
 			v := av[len(av)-1]
-			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
+			fmt.Printf("%2s%-11s%-13s%-13s%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.DateNow, v.Model)
 		}
 	} else {
 		for _, v := range av {
 			if v.Model == mode {
-				fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
+				fmt.Printf("%2s%-11s%-13s%-13s%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.DateNow, v.Model)
 			}
-		}
-	}
-}
-
-//记录运行程序
-func WriteStart(cmd string) {
-	fileName, file := getLogFilePullPath("version", "app", cmd)
-	defer file.Close()
-	av := jsonRead(fileName)
-	switchStart(av)
-	data, err := json.MarshalIndent(av, "", "	 ")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	jsonWriteReal(fileName, data)
-	//jsonWrite(file, data)
-}
-
-//停止应用
-func WriteStop(cmd string) {
-	fileName, file := getLogFilePullPath("version", "app", cmd)
-	defer file.Close()
-	av := jsonRead(fileName)
-	switchStop(av)
-	data, err := json.MarshalIndent(av, "", "	 ")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	jsonWriteReal(fileName, data)
-	//jsonWrite(file, data)
-}
-
-//修改运行版本状态
-func switchStart(appV []AppVersion) {
-	for i, v := range appV {
-		fmt.Println(v.IsStatus)
-		if v.IsStatus {
-			appV[i].IsUsed = true
-		} else {
-			appV[i].IsUsed = false
-		}
-	}
-}
-
-//修改运行版本状态
-func switchStop(appV []AppVersion) {
-	count := len(appV)
-	for i := 0; i < count; i++ {
-		if appV[i].IsUsed == true {
-			appV[i].IsUsed = false
 		}
 	}
 }
@@ -133,8 +82,7 @@ func (this *AppVersion) GetVersion(cmd string) string {
 		DateNow:  this.DateNow,
 		Branch:   this.Branch,
 		CommitId: this.CommitId,
-		IsStatus: true,
-		IsUsed:   false}
+		IsStatus: true,}
 
 	_, version := switchStatus(u, av)
 	return version
@@ -152,8 +100,7 @@ func (this *AppVersion) WriteVersion(cmd string) string {
 		DateNow:  this.DateNow,
 		Branch:   this.Branch,
 		CommitId: this.CommitId,
-		IsStatus: true,
-		IsUsed:   false}
+		IsStatus: true,}
 
 	u, version := switchStatus(u, av)
 	data, err := json.MarshalIndent(u, "", "	 ")
@@ -182,10 +129,10 @@ func (this *AppVersion) isExtraVersion(av []AppVersion) {
 //获取所有版本
 func (this *AppVersion) getAllVersion(av []AppVersion) {
 	fmt.Println("")
-	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "正在使用", "时间")
+	fmt.Printf("%2s%s%9s%9s%9s%9s%7s\n", "", "版本号", "提交ID", "分支", "当前版本", "时间")
 	for _, v := range av {
 		if v.Model == this.Model {
-			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow)
+			fmt.Printf("%2s%-11s%-13s%-13s%-13t%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.DateNow)
 		}
 	}
 }
