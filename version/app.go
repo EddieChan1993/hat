@@ -31,9 +31,9 @@ func GetVerLog(mode, cmd string) {
 			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
 		}
 	} else if mode == VER_LAST_ONE {
-		if len(av)==0{
+		if len(av) == 0 {
 			fmt.Println("暂无版本记录")
-		}else{
+		} else {
 			v := av[len(av)-1]
 			fmt.Printf("%2s%-11s%-13s%-9s%-13t%-13t%-22s%s\n", "", v.Version, v.CommitId, v.Branch, v.IsStatus, v.IsUsed, v.DateNow, v.Model)
 		}
@@ -76,9 +76,8 @@ func WriteStop(cmd string) {
 
 //修改运行版本状态
 func switchStart(appV []AppVersion) {
-	count := len(appV)
-	for i := 0; i < count; i++ {
-		if appV[i].IsStatus == true {
+	for i, v := range appV {
+		if v.IsStatus {
 			appV[i].IsUsed = true
 		} else {
 			appV[i].IsUsed = false
