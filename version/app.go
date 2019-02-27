@@ -77,6 +77,7 @@ func WriteStop(cmd string) {
 //修改运行版本状态
 func switchStart(appV []AppVersion) {
 	for i, v := range appV {
+		fmt.Println(v.IsStatus)
 		if v.IsStatus {
 			appV[i].IsUsed = true
 		} else {
